@@ -18,8 +18,24 @@ class Model :
     """
     def __init__(input_dim)
         self.indim = indim
+        self.layers = []
 
-    def train(data, targets, nepochs, optimizer) :
+    def push_layer(layer) :
+        """
+        Add a new hidden layer to the network. 
+        input must be a valid instance of a class in the Layer
+        hierarchy
+        """
+        self.layers.push(layer)
+
+    def compile(optimizer) :
+        """
+        Takes all of the layers and connects them together, prepares the network
+        to be run. We need a valid instance of the optimizer class.
+        """
+        return
+
+    def train(data, targets, nepochs) :
         """
         data - numpy style matrices of data to train on.
         nepochs - number of epochs to train for
@@ -46,3 +62,9 @@ class Layer :
     def __init__(dim) :
         self.dim = dim
 
+
+class Optimizer :
+    """
+    Base class for the Optimizer hierarchy. Optimizers are algorithms for optimizing the weights
+    in the network, e.g. SGD, ADAGRAD, RMSPROP. See child classes.
+    """
