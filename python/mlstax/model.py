@@ -46,15 +46,13 @@ class Model :
                 output = datum
                 for i, layer in enumerate(self.layers) :
                     output = layer.feed(output)
-                    print "output : %s" % str(output)
-                    print "\n\n\n"
+                    # print "output : %s" % str(output)
+                    # print "\n\n\n"
                 error = targets[-1] - output
                 delta = error
-                # delta = delta.dot(self.layers[-1].Wh.T)
-                print "Delta for epoch %s = %s" % (epoch, delta)
+                print "Error for Epoch %s : %s" % (epoch, error)
 
                 for i, layer in enumerate(self.layers[::-1]) :
-                    print delta
                     delta = layer.bprop(delta)
                 
 
