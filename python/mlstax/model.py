@@ -12,8 +12,8 @@ class Model :
     DNN. Once built, can be trained by calling train(), and used for prediction by
     calling predict()
     """
-    def __init__(self, input_dim, layers=[])
-        self.indim = indim
+    def __init__(self, input_dim, layers=[]) :
+        self.indim = input_dim
         self.layers = layers
 
     def push_layer(self, layer) :
@@ -22,7 +22,11 @@ class Model :
         input must be a valid instance of a class in the Layer
         hierarchy
         """
-        self.layers.push(layer)
+        if self.layers and self.layers[-1].size != layer.input_dim:
+            raise ValueError("Layer Sizing Mismatch.\n Layers : %s --> %s" %
+                        (str(self.layers[-1]), str(layer))
+                    )
+        self.layers.append(layer)
 
     def compile(self, optimizer) :
         """
@@ -31,13 +35,28 @@ class Model :
         """
         pass
 
-    def train(self, data, targets, nepochs) :
+    def train(self, data, targets, batchsize, nepochs) :
         """
         data - numpy style matrices of data to train on.
         nepochs - number of epochs to train for
         optimizer - instance of an Optimizer class (SGD, etc)
         """
-        pass
+        for epoch in range(nepochs) :
+            for datum in data :
+                output = datum
+                for i, layer in enumerate(self.layers) :
+                    output = layer.feed(output)
+                    print "output : %s" % str(output)
+                    print "\n\n\n"
+                error = targets[-1] - output
+                delta = error
+                # delta = delta.dot(self.layers[-1].Wh.T)
+                print "Delta for epoch %s = %s" % (epoch, delta)
+
+                for i, layer in enumerate(self.layers[::-1]) :
+                    print delta
+                    delta = layer.bprop(delta)
+                
 
     def predict(self, data) :
         pass
