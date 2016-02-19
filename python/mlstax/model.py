@@ -1,11 +1,7 @@
 """
 author : John Allard (github: jhallard)
-MLstax - A simple Deep-Learning framework modeled after Keras.
-Build models by stacking layers, activation functions, and other 'blocks'
-on-top of one another. Train and use the models for prediction purposes.
-
-Made as part of my final project for CS112 at UCSC, Winter 2016
-LICENSE : DWTFYW Public License
+date : 2/14/2016
+LICENSE : MIT
 """
 
 import numpy as np
@@ -16,9 +12,9 @@ class Model :
     DNN. Once built, can be trained by calling train(), and used for prediction by
     calling predict()
     """
-    def __init__(input_dim)
+    def __init__(input_dim, layers=[])
         self.indim = indim
-        self.layers = []
+        self.layers = layers
 
     def push_layer(layer) :
         """
@@ -51,20 +47,3 @@ class Model :
 
     def load_weights(fn) :
         return
-        
-
-class Layer :
-    """
-    Base class for the Layer hierarchy. Each class represents a single
-    layer in a deep neural network. The layers are then chained together under
-    a model class along with activation functions.
-    """
-    def __init__(dim) :
-        self.dim = dim
-
-
-class Optimizer :
-    """
-    Base class for the Optimizer hierarchy. Optimizers are algorithms for optimizing the weights
-    in the network, e.g. SGD, ADAGRAD, RMSPROP. See child classes.
-    """
