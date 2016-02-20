@@ -5,9 +5,15 @@ LICENSE : MIT
 """
 
 import numpy as np
+import time
 
 def sigmoid(x) :
-    return 1.0 / (1.0 + np.exp(-x))
+    try :
+        return 1.0 / (1.0 + np.exp(-x))
+    except Exception as e :
+        print "inp : %s, error %s" % (x, e)
+        time.sleep(1)
+        
 
 def relu(x) :
     return x * (x>0)
@@ -20,7 +26,7 @@ class Layer(object) :
     a model class along with activation functions.
     """
 
-    def __init__(self, size, input_dim, init='uniform', activation="") :
+    def __init__(self, size, input_dim, init='uniform', activation="", learn_rate=0.02) :
         self.input_dim = input_dim
         self.lname = ""   # children will overwrite
         self.init = init  # initialization function for weights
@@ -31,6 +37,7 @@ class Layer(object) :
         self.hs = None    # hidden state (post activation function)
         self.acc = None   # accumulation (pre activation function)
         self.dhs = None   # d/dx matrix for hidden state
+        self.learn_rate = learn_rate
         self.act_default = "sigmoid"
         self.actstr = activation if activation else self.act_default
         self.activations = {
@@ -39,7 +46,7 @@ class Layer(object) :
                 "relu" : relu
         }
         self.dactivations = {
-                "tanh" : np.tanh,
+                "tanh" : lambda x : 1 - x**2,
                 "sigmoid" : lambda x : x*(1-x),
                 "relu" : lambda x : 1 * (x>0)
         }
@@ -74,19 +81,21 @@ class Dense(Layer) :
     def __init__(self, size, input_dim, **kwargs) :
         super(Dense, self).__init__(size, input_dim, **kwargs)
         self.lname = "Dense"
-        self.Wh = np.random.randn(self.input_dim, self.size)*0.02
-        self.hs = np.random.randn(self.size, 1)*0.02
-        self.bh  = np.random.randn(self.size, 1)*0.02
+        self.Wh = np.random.rand(self.input_dim, self.size)*0.2
+        self.hs = np.random.rand(self.size, 1)*0.2
+        self.bh  = np.random.rand(self.size, 1)*0.2
 
     def feed(self, data) :
         self.acc = np.dot(data, self.Wh)
         self.hs = self.activation(self.acc)
-        # print self.acc
-        # print self.hs
         return self.hs
 
     def bprop(self, err) :
         newdelta = err * self.dactivation(self.hs)
         newerr = newdelta.dot(self.Wh.T)
-        self.Wh += self.hs.T.dot(err)
+        self.dWh = err.dot(self.hs.T)
+        # print "bprop %s %s %s %s" % (err, newdelta, newerr, self.hs.T.dot(err))
         return newerr
+
+    def update(self) :
+        self.Wh -= self.learn_rate * self.dWh

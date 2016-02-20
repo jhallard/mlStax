@@ -43,18 +43,21 @@ class Model :
         """
         for epoch in range(nepochs) :
             toterr = 0
-            for datum in data :
+            for ind, datum in enumerate(data) :
                 output = datum
                 for i, layer in enumerate(self.layers) :
                     output = layer.feed(output)
                     # print "output : %s" % str(output)
                     # print "\n\n\n"
-                error = targets[-1] - output
-                delta = error
+                # print "%s, %s" % (targets[ind], output)
+                error = output - targets[ind]
                 toterr += error
 
                 for i, layer in enumerate(self.layers[::-1]) :
-                    delta = layer.bprop(delta)
+                    error = layer.bprop(error)
+
+                for layer in self.layers :
+                    layer.update()
 
             print "Error for Epoch %s : %s" % (epoch, toterr/len(data))
                 
