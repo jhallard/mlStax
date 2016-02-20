@@ -7,18 +7,6 @@ LICENSE : MIT
 import numpy as np
 import time
 
-def sigmoid(x) :
-    try :
-        return 1.0 / (1.0 + np.exp(-x))
-    except Exception as e :
-        print "inp : %s, error %s" % (x, e)
-        time.sleep(1)
-        
-
-def relu(x) :
-    return x * (x>0)
-
-
 class Layer(object) :
     """
     Base class for the Layer hierarchy. Each class represents a single
@@ -26,7 +14,7 @@ class Layer(object) :
     a model class along with activation functions.
     """
 
-    def __init__(self, size, input_dim, init='uniform', activation="", learn_rate=0.02) :
+    def __init__(self, size, input_dim, init='uniform', activation="", learn_rate=0.05) :
         self.input_dim = input_dim
         self.lname = ""   # children will overwrite
         self.init = init  # initialization function for weights
@@ -41,11 +29,15 @@ class Layer(object) :
         self.act_default = "sigmoid"
         self.actstr = activation if activation else self.act_default
         self.activations = {
+                "none" : lambda x : x,
                 "tanh" : np.tanh,
-                "sigmoid" : sigmoid,
-                "relu" : relu
+                "sigmoid" : lambda x :  1.0 / (1.0 + np.exp(-x)),
+                "relu" : lambda x : x * (x>0)
         }
+        # note that these give f'(x) given f(x), not x.
+        # i.e. sigmoid'(x) = sigmoid(x)*(1-sigmoid(x)), this assumes you pass in sigmoid(x) as x
         self.dactivations = {
+                "none" : lambda x : 1,
                 "tanh" : lambda x : 1 - x**2,
                 "sigmoid" : lambda x : x*(1-x),
                 "relu" : lambda x : 1 * (x>0)
@@ -67,6 +59,12 @@ class Layer(object) :
         """
         pass
 
+    def update(self) :
+        """
+        updates the weight matrix by some combination of the learning rate and gradient
+        """
+        pass
+
     def __str__(self) :
         return """type : %s, indim : %s, init : %s, size : %s, activation : %s""" % \
               (self.lname, self.input_dim, self.init, self.size, self.activation)
@@ -81,21 +79,25 @@ class Dense(Layer) :
     def __init__(self, size, input_dim, **kwargs) :
         super(Dense, self).__init__(size, input_dim, **kwargs)
         self.lname = "Dense"
-        self.Wh = np.random.rand(self.input_dim, self.size)*0.2
-        self.hs = np.random.rand(self.size, 1)*0.2
-        self.bh  = np.random.rand(self.size, 1)*0.2
+        self.Wh = np.random.randn(self.size, self.input_dim)*0.2
+        self.dWh = np.zeros_like(self.Wh)
+        self.hs = np.random.randn(self.size, 1)*0.2
+        self.bh  = np.random.randn(self.size, 1)*0.2
+        self.dbh  = np.zeros_like(self.bh)
 
     def feed(self, data) :
-        self.acc = np.dot(data, self.Wh)
+        self.acc = np.dot(data, self.Wh.T) + self.bh
+        print self.acc
         self.hs = self.activation(self.acc)
         return self.hs
 
     def bprop(self, err) :
         newdelta = err * self.dactivation(self.hs)
-        newerr = newdelta.dot(self.Wh.T)
-        self.dWh = err.dot(self.hs.T)
-        # print "bprop %s %s %s %s" % (err, newdelta, newerr, self.hs.T.dot(err))
+        newerr = self.Wh.T.dot(newdelta)
+        self.dWh = self.hs.T.dot(newdelta.T) #newdelta.dot(self.hs.T)
+        self.dbh = newdelta
         return newerr
 
     def update(self) :
         self.Wh -= self.learn_rate * self.dWh
+        self.bh -= self.learn_rate * self.dbh

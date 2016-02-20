@@ -66,7 +66,7 @@ if __name__ == '__main__' :
     for ldim in layer_dims :
         mm.push_layer(layer.Dense(ldim, last_dim))
         last_dim = ldim
-    mm.push_layer(layer.Dense(outdim, last_dim))
+    mm.push_layer(layer.Dense(outdim, last_dim, activation="none"))
 
     print "Beginning training session\n"
 

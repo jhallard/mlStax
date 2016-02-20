@@ -47,11 +47,10 @@ class Model :
                 output = datum
                 for i, layer in enumerate(self.layers) :
                     output = layer.feed(output)
-                    # print "output : %s" % str(output)
-                    # print "\n\n\n"
-                # print "%s, %s" % (targets[ind], output)
-                error = output - targets[ind]
-                toterr += error
+                if ind % 3 == 0 :
+                    print "%s, %s" % (targets[ind], output)
+                error = targets[ind] - output
+                toterr += abs(error)
 
                 for i, layer in enumerate(self.layers[::-1]) :
                     error = layer.bprop(error)
