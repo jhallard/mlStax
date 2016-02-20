@@ -58,7 +58,7 @@ if __name__ == '__main__' :
     indat = np.array(indat)
     targets = np.array(targets)
 
-    print "Input Data : %s \nOutput Data : %s\n" % (indat, targets)
+    # print "Input Data : %s \nOutput Data : %s\n" % (indat, targets)
 
     # build the model
     mm = model.Model(indim)
