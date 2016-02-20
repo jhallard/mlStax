@@ -35,13 +35,14 @@ class Model :
         """
         pass
 
-    def train(self, data, targets, batchsize, nepochs) :
+    def train(self, data, targets, batchsize=10, nepochs=10) :
         """
         data - numpy style matrices of data to train on.
         nepochs - number of epochs to train for
         optimizer - instance of an Optimizer class (SGD, etc)
         """
         for epoch in range(nepochs) :
+            toterr = 0
             for datum in data :
                 output = datum
                 for i, layer in enumerate(self.layers) :
@@ -50,10 +51,12 @@ class Model :
                     # print "\n\n\n"
                 error = targets[-1] - output
                 delta = error
-                print "Error for Epoch %s : %s" % (epoch, error)
+                toterr += error
 
                 for i, layer in enumerate(self.layers[::-1]) :
                     delta = layer.bprop(delta)
+
+            print "Error for Epoch %s : %s" % (epoch, toterr/len(data))
                 
 
     def predict(self, data) :
