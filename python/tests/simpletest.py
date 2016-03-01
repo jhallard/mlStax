@@ -7,6 +7,7 @@ make sure things don't crash and burn.
 
 import numpy as np
 import sys
+from sys import stdin
 
 sys.path.append("../")
 sys.path.append("../mlstax")
@@ -25,6 +26,7 @@ if __name__ == '__main__' :
     indat = []
     targets = []
     indim = outdim = 0
+    layer_dims = []
     epochs = 5
     if len(sys.argv) > 1 :
         fn = sys.argv[1]
@@ -47,7 +49,7 @@ if __name__ == '__main__' :
                     sys.exit(1)
                 indim = vals[0]
                 outdim = vals[-1]
-                layer_dims = vals[1:-2]
+                layer_dims = vals[1:-1]
                 continue
             else :
                 vals = line.split(' ')
@@ -68,8 +70,14 @@ if __name__ == '__main__' :
         last_dim = ldim
     mm.push_layer(layer.Dense(outdim, last_dim, activation="none"))
 
+    print str(mm)
+
     print "Beginning training session\n"
 
     mm.train(indat, targets, 1, epochs)
 
+    for line in sys.stdin:
+        inp = [float(x) for x in line.split(' ')]
+        print inp
+        print mm.predict(np.array([inp]))
 

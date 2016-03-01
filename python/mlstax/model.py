@@ -25,7 +25,8 @@ class Model :
         if self.layers and self.layers[-1].size != layer.input_dim:
             raise ValueError("Layer Sizing Mismatch.\n Layers : %s --> %s" %
                         (str(self.layers[-1]), str(layer))
-                    )
+                   )
+        layer.lnum = len(self.layers)+1
         self.layers.append(layer)
 
     def compile(self, optimizer) :
@@ -35,7 +36,7 @@ class Model :
         """
         pass
 
-    def train(self, data, targets, batchsize=10, nepochs=10) :
+    def train(self, data, targets, batchsize=10, nepochs=10, verbose=False) :
         """
         data - numpy style matrices of data to train on.
         nepochs - number of epochs to train for
@@ -44,13 +45,15 @@ class Model :
         for epoch in range(nepochs) :
             toterr = 0
             for ind, datum in enumerate(data) :
-                output = datum
+                output = np.array([datum]).T
                 for i, layer in enumerate(self.layers) :
                     output = layer.feed(output)
-                if ind % 3 == 0 :
-                    print "%s, %s" % (targets[ind], output)
-                error = targets[ind] - output
-                toterr += abs(error)
+                # if ind % 33 == 0 :
+                    # print "%s, %s" % (targets[ind], output)
+                error = output - targets[ind]
+                # print "error : %s" % error
+                loss = 0.5*(np.array(error).dot(np.array(error).T))
+                toterr += abs(loss)
 
                 for i, layer in enumerate(self.layers[::-1]) :
                     error = layer.bprop(error)
@@ -58,14 +61,27 @@ class Model :
                 for layer in self.layers :
                     layer.update()
 
-            print "Error for Epoch %s : %s" % (epoch, toterr/len(data))
+            print "Loss for Epoch %s : %s" % (epoch, toterr/len(data))
                 
 
     def predict(self, data) :
-        pass
+        retval = []
+        for ind, datum in enumerate(data) :
+            output = np.array([datum]).T
+            for i, layer in enumerate(self.layers) :
+                output = layer.feed(output)
+            print output
+            retval.append(output)
+        return retval
 
     def load_model(self, fn) :
         pass 
 
     def load_weights(self, fn) :
         pass
+
+    def __str__(self) :
+        xx= "Model Architecture :\n" 
+        for i, layer in enumerate(self.layers) :
+            xx += str(layer) + "\n"
+        return xx
