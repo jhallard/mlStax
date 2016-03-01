@@ -48,8 +48,8 @@ class Model :
                 output = np.array([datum]).T
                 for i, layer in enumerate(self.layers) :
                     output = layer.feed(output)
-                # if ind % 33 == 0 :
-                    # print "%s, %s" % (targets[ind], output)
+                if True  :
+                    print "%s, %s" % (targets[ind], output)
                 error = output - targets[ind]
                 # print "error : %s" % error
                 loss = 0.5*(np.array(error).dot(np.array(error).T))
@@ -70,7 +70,6 @@ class Model :
             output = np.array([datum]).T
             for i, layer in enumerate(self.layers) :
                 output = layer.feed(output)
-            print output
             retval.append(output)
         return retval
 

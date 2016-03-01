@@ -78,6 +78,5 @@ if __name__ == '__main__' :
 
     for line in sys.stdin:
         inp = [float(x) for x in line.split(' ')]
-        print inp
         print mm.predict(np.array([inp]))
 

@@ -27,7 +27,9 @@ class Layer(object) :
         self.acc = None   # accumulation (pre activation function)
         self.dhs = None   # d/dx matrix for hidden state
         self.learn_rate = learn_rate
-        self.act_default = "relu"
+        self.act_default = "sigmoid"
+        self.momc = 0.5 
+        self.mom = np.zeros_like(self.dWh)
         self.actstr = activation if activation else self.act_default
         self.activations = {
                 "none" : lambda x : x,
@@ -85,10 +87,12 @@ class Dense(Layer) :
         self.hs = np.random.randn(self.size, 1)*1.0
         self.bh  = np.zeros_like(self.hs)
         self.dbh  = np.zeros_like(self.bh)
+        self.last_input = None
 
     def feed(self, data, verbose=False) :
         # print self.Wh
         # print self.bh
+        self.last_input = data
         self.acc = np.dot(self.Wh, data) + self.bh
         self.hs = self.activation(self.acc)
         # print "___ Feed Forward ___"
@@ -103,10 +107,10 @@ class Dense(Layer) :
     def bprop(self, err) :
         newdelta = np.multiply(err, self.dactivation(self.hs))
         newerr = self.Wh.T.dot(newdelta)
-        self.dWh += self.hs.T.dot(newdelta)
+        self.dWh += newdelta.dot(self.last_input.T)
         self.dbh += newdelta
-        np.clip(self.dWh, -50, 50, out=self.dWh)
-        np.clip(self.dbh, -50, 50, out=self.dbh)
+        # np.clip(self.dWh, -50, 50, out=self.dWh)
+        # np.clip(self.dbh, -50, 50, out=self.dbh)
         # np.clip(self.Wh, -10, 10, out=self.dWh)
         # print "hs : " + str(self.hs)
         # print "newdelta : " + str(newdelta)
@@ -120,6 +124,8 @@ class Dense(Layer) :
         # print "dWh shape : %s" % str(self.dWh.shape)
         # print "hs shape  : %s" % str(self.hs.shape)
         # print "\n\n"
+        # self.mom = self.mom*self.momc + self.learn_rate * self.dWh
+        # self.Wh -= self.mom
         self.Wh -= self.learn_rate * self.dWh
         self.bh -= self.learn_rate * self.dbh
         self.dWh = np.zeros_like(self.Wh)
