@@ -3,7 +3,6 @@ author : John Allard (github: jhallard)
 date : 2/14/2016
 LICENSE : MIT
 """
-
 import numpy as np
 import time
 
@@ -16,8 +15,6 @@ class Layer(object) :
 
     def __init__(self, size, input_dim, init='uniform', activation="", learn_rate=0.05) :
         self.input_dim = input_dim
-        self.lname = ""   # children will overwrite
-        self.lnum = -1    
         self.init = init  # initialization function for weights
         self.size = size  # number of nodes in layer
         self.Wh = None    # weight matrix
@@ -28,7 +25,9 @@ class Layer(object) :
         self.dhs = None   # d/dx matrix for hidden state
         self.learn_rate = learn_rate
         self.act_default = "sigmoid"
-        self.momc = 0.5 
+        self.lname = ""   # children will overwrite
+        self.lnum = -1    
+        self.momc = 0.1
         self.mom = np.zeros_like(self.dWh)
         self.actstr = activation if activation else self.act_default
         self.activations = {
@@ -82,26 +81,17 @@ class Dense(Layer) :
     def __init__(self, size, input_dim, **kwargs) :
         super(Dense, self).__init__(size, input_dim, **kwargs)
         self.lname = "Dense"
-        self.Wh = np.random.randn(self.size, self.input_dim)*1.0
+        self.Wh = np.random.randn(self.size, self.input_dim)*0.3
         self.dWh = np.zeros_like(self.Wh)
-        self.hs = np.random.randn(self.size, 1)*1.0
+        self.hs = np.random.randn(self.size, 1)*0.3
         self.bh  = np.zeros_like(self.hs)
         self.dbh  = np.zeros_like(self.bh)
         self.last_input = None
 
     def feed(self, data, verbose=False) :
-        # print self.Wh
-        # print self.bh
         self.last_input = data
         self.acc = np.dot(self.Wh, data) + self.bh
         self.hs = self.activation(self.acc)
-        # print "___ Feed Forward ___"
-        # print "data shape : %s" % str(data.shape)
-        # print "Wh shape  : %s" % str(self.Wh.shape)
-        # print "dWh shape : %s" % str(self.dWh.shape)
-        # print "acc shape : %s" % str(self.acc.shape)
-        # print "hs shape :  %s" % str(self.hs.shape)
-        # print "\n\n"
         return self.hs
 
     def bprop(self, err) :
@@ -109,24 +99,60 @@ class Dense(Layer) :
         newerr = self.Wh.T.dot(newdelta)
         self.dWh += newdelta.dot(self.last_input.T)
         self.dbh += newdelta
-        # np.clip(self.dWh, -50, 50, out=self.dWh)
-        # np.clip(self.dbh, -50, 50, out=self.dbh)
-        # np.clip(self.Wh, -10, 10, out=self.dWh)
-        # print "hs : " + str(self.hs)
-        # print "newdelta : " + str(newdelta)
-        # print "dWh: " + str(self.dWh.shape)
+        np.clip(self.dWh, -5, 5, out=self.dWh)
+        np.clip(self.dbh, -5, 5, out=self.dbh)
         return newerr
 
     def update(self) :
-        # print self.dWh
-        # print "___ Update __"
-        # print "Wh shape  : %s" % str(self.Wh.shape)
-        # print "dWh shape : %s" % str(self.dWh.shape)
-        # print "hs shape  : %s" % str(self.hs.shape)
-        # print "\n\n"
-        # self.mom = self.mom*self.momc + self.learn_rate * self.dWh
-        # self.Wh -= self.mom
-        self.Wh -= self.learn_rate * self.dWh
+        self.mom = self.mom*self.momc + self.learn_rate * self.dWh
+        self.Wh -= self.mom
         self.bh -= self.learn_rate * self.dbh
         self.dWh = np.zeros_like(self.Wh)
         self.dbh = np.zeros_like(self.bh)
+
+
+class Convolutional(Dense) :
+    def __init__(self, size, input_dim, windowdim,  **kwargs) :
+        super(RNN, self).__init__(size, input_dim, **kwargs)
+
+    def feed(self, data, verbose=False) :
+        pass
+
+    def bprop(self, err) :
+        pass
+
+    def update(self) :
+        pass
+
+"""
+These are the layers in the recurrent branch of the hierarchy, to be implemented
+soon. @TODO
+"""
+class RNN(Layer) :
+
+    def __init__(self, size, input_dim, memlen, **kwargs) :
+        super(RNN, self).__init__(size, input_dim, **kwargs)
+
+    def feed(self, data, verbose=False) :
+        pass
+
+    def bprop(self, err) :
+        pass
+
+    def update(self) :
+        pass
+
+
+class LSTM(RNN) :
+
+    def __init__(self, size, input_dim, memlen, **kwargs) :
+        super(LSTM, self).__init__(size, input_dim, memlen, **kwargs)
+
+    def feed(self, data, verbose=False) :
+        pass
+
+    def bprop(self, err) :
+        pass
+
+    def update(self) :
+        pass

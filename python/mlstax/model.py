@@ -38,9 +38,10 @@ class Model :
 
     def train(self, data, targets, batchsize=10, nepochs=10, verbose=False) :
         """
-        data - numpy style matrices of data to train on.
+        data - numpy style input data
+        targets - numpy style label data
+        batchsize - iterations done before weight update
         nepochs - number of epochs to train for
-        optimizer - instance of an Optimizer class (SGD, etc)
         """
         for epoch in range(nepochs) :
             toterr = 0
@@ -48,20 +49,18 @@ class Model :
                 output = np.array([datum]).T
                 for i, layer in enumerate(self.layers) :
                     output = layer.feed(output)
-                if True  :
-                    print "%s, %s" % (targets[ind], output)
                 error = output - targets[ind]
-                # print "error : %s" % error
-                loss = 0.5*(np.array(error).dot(np.array(error).T))
+                loss = 0.5*(np.array(error).dot(np.array(error).T)[0][0])
                 toterr += abs(loss)
 
                 for i, layer in enumerate(self.layers[::-1]) :
                     error = layer.bprop(error)
 
-                for layer in self.layers :
-                    layer.update()
+                if ind != 0 and ind % batchsize == 0 :
+                    for layer in self.layers :
+                        layer.update()
 
-            print "Loss for Epoch %s : %s" % (epoch, toterr/len(data))
+            print "Loss for Epoch %s : %.6f" % (epoch, toterr/len(data))
                 
 
     def predict(self, data) :
@@ -79,8 +78,14 @@ class Model :
     def load_weights(self, fn) :
         pass
 
+    def save_model(self, fn) :
+        pass
+
+    def save_weights(self, fn) :
+        pass
+
     def __str__(self) :
-        xx= "Model Architecture :\n" 
+        retstr = "Model Architecture :\n" 
         for i, layer in enumerate(self.layers) :
-            xx += str(layer) + "\n"
-        return xx
+            retstr += str(layer) + "\n"
+        return retstr

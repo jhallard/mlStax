@@ -12,3 +12,7 @@ class Optimizer :
     """
     def __init__() :
         pass
+
+    def lossfn :
+        pass
+
