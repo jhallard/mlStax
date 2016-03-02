@@ -59,6 +59,8 @@ class Model :
 
         self.costfn = optimizer.compile(self.feed_forward, self.outputs)
         updates = optimizer.updates(self.layers)
+
+        print updates
         
         # define a symbolic training iteration based on the input and output data,
         # the cost function, and the update algorithm defined in the optimizer class
@@ -74,6 +76,7 @@ class Model :
             outputs=[self.costfn, self.feed_forward], # grab the cost and the raw output for 
             name="evaluate"                           # the evaluation steps 
         )
+
     def train(self, data, targets, batchsize=10, nepochs=10, verbose=False) :
         """
         data - numpy style input data
@@ -82,7 +85,7 @@ class Model :
         nepochs - number of epochs to train for
         """
         for epoch in range(nepochs) :
-            toterr = 0 
+            toterr = 0.0
             for ind, datum in enumerate(data) :
                 loss = self._train(
                         datum.astype(np.float32).T,

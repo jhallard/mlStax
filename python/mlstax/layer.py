@@ -43,7 +43,9 @@ class Layer(object) :
 
 
 class Dense(Layer) :
-
+    """
+    your simple fully connected layer with a bias term.
+    """
     def __init__(self, size, init=None, activation=None, **kwargs) :
         super(Dense, self).__init__(size, **kwargs)
         self.lname = "Dense"
@@ -51,3 +53,15 @@ class Dense(Layer) :
     def feed(self, data) :
         return self.activation.activate(T.dot(self.weights, data) + self.bias)
 
+# class Convolutional(Dense) :
+    # # @TODO
+# 
+# class RNN(Layer) :
+    # # @TODO
+# 
+# class LSTM(RNN) :
+    # # @TODO
+# 
+# class GRU(RNN) :
+    # # #TODO
+# # # # # # # # # 

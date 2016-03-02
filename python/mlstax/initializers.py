@@ -26,6 +26,7 @@ class Initializer(object) :
         """
         pass
 
+
 class Uniform(Initializer) :
     """
     initializes a weight matrix from a uniform distribution, bounded above and below by
@@ -45,7 +46,6 @@ class Uniform(Initializer) :
             ),
             dtype=theano.config.floatX
         )
-
 
 
 def Normal(Initializer) :

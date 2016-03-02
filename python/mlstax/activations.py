@@ -16,7 +16,6 @@ class Activation(object) :
     hierarchy so that people can submit custom functions and so we can stack
     them more easily
     """
-
     def activate(self, data) :
         """ override this to use your activation function on the given input """
         pass
