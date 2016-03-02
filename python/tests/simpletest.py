@@ -77,6 +77,6 @@ if __name__ == '__main__' :
     mm.train(indat, targets, 1, epochs)
 
     for line in sys.stdin:
-        inp = [float(x) for x in line.split(' ')]
+        inp = [float(x) for x in line.strip().split(' ')]
         print mm.predict(np.array([inp]))
 
