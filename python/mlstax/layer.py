@@ -9,7 +9,7 @@ import theano.tensor.nnet as nnet
 import numpy as np
 import time
 
-import activation, initializer
+import activations, initializers
 
 class Layer(object) :
     """
@@ -18,31 +18,36 @@ class Layer(object) :
     a model class along with activation functions.
     """
     def __init__(self, size, init=None, activation=None) :
+        """
+        @size - nodes in the layer
+        @init - initializer class
+        @activation - activation class
+        """
         self.lnum = -1
         self.lname = ""
         self.weights = None 
         self.bias = None
-        self.state = None 
         self.size = size
-        self.init = init if init else initializer.Uniform(-1, 1)
-        self.activation = activation if activation else activations.Sigmoid
+        self.init = init if init else initializers.Uniform(-1, 1)
+        self.activation = activation if activation else activations.Sigmoid()
 
     def feed(self, data) :
         """ returns a theano equation defining the output of this layer given data """
         pass
 
     def init_weights(self, indim) :
-        self.weights, self.bias = init.init_weights(self.size, indim)
+        self.weights = self.init.init_weights((self.size, indim))
+        self.bias = initializers.Zeros().init_weights((self.size, 1))
         self.weights = theano.shared(value=self.weights, name='weights', borrow=True)
         self.bias = theano.shared(value=self.bias, name='bias', borrow=True)
 
 
 class Dense(Layer) :
 
-    def __init__(self, size, init, activation, **kwargs) :
+    def __init__(self, size, init=None, activation=None, **kwargs) :
         super(Dense, self).__init__(size, **kwargs)
         self.lname = "Dense"
 
     def feed(self, data) :
-        return self.activation.activate(T.dot(dat, self.weights) + self.bias)
+        return self.activation.activate(T.dot(self.weights, data) + self.bias)
 

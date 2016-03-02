@@ -15,23 +15,24 @@ class Initializer(object) :
     way to initialize the hidden weights for a given layer
     """
     def __init__(self) :
-        self.rng = rng = numpy.random.RandomState(2702) # we can't use 2701, that's the product
-                                                        # of two primes!
+        self.rng = np.random.RandomState(2702) # we can't use 2701, that's the product
+                                                     # of two primes!
 
     def init_weights(self, size) :
         """
         override this function to return a matrix of dimensions `size` filled
         with the specific way you want to initialize it.
+        *should be a numpy matrix with dtype=theano.config.floatX*
         """
         pass
 
-def Uniform(Initializer) :
+class Uniform(Initializer) :
     """
     initializes a weight matrix from a uniform distribution, bounded above and below by
     wmax and wmin repectively.
     """
     def __init__(self, wmax, wmin) :
-        super(Uniform, self).__init__(self)
+        super(Uniform, self).__init__()
         self.wmax = wmax
         self.wmin = wmin
 
@@ -53,7 +54,7 @@ def Normal(Initializer) :
     wmax and wmin repectively.
     """
     def __init__(self, mean, stddev) :
-        super(Uniform, self).__init__(self)
+        super(Normal, self).__init__()
         self.mean = mean
         self.stddev = stdev
 
@@ -68,23 +69,23 @@ def Normal(Initializer) :
         )
 
 
-def Zeros(Initializer) :
+class Zeros(Initializer) :
     """
     initializes a weight matrix to all zeros (pointless class I know)
     """
     def __init__(self) :
-        super(Uniform, self).__init__(self)
+        super(Zeros, self).__init__()
 
     def init_weights(self, size) :
         return np.zeros(size, dtype=theano.config.floatX)
 
 
-def Ones(Initializer) :
+class Ones(Initializer) :
     """
     initializes a weight matrix to all ones (pointless class I know)
     """
     def __init__(self) :
-        super(Uniform, self).__init__(self)
+        super(Ones, self).__init__()
 
     def init_weights(self, size) :
         return np.ones(size, dtype=theano.config.floatX)

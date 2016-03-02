@@ -4,7 +4,14 @@ date : 2/14/2016
 LICENSE : MIT
 """
 
+import theano
+import theano.tensor as T
+import theano.tensor.nnet as nnet
 import numpy as np
+import sys
+
+sys.path.append("../")
+import layer, optimizers, initializers, activations
 
 class Model :
     """
@@ -17,8 +24,10 @@ class Model :
         self.inputs = T.vector('inputs')
         self.outputs = T.vector('outputs')
         self.feed_forward = None # defined on call to compile()
-        self.costfn = None # symbolic cost function for the network
         self.layers = []
+        self.costfn = None # grabbed on optimizer compilitation (see compile())
+        self._train = None
+        self._evaluate = None
         for layer in layers :
             self.push_layer(layer)
 
@@ -34,7 +43,7 @@ class Model :
         layer.lnum = len(self.layers)+1
         self.layers.append(layer)
 
-    def compile(self, optimizer=optimizer.SGD, costfn="MSE") :
+    def compile(self, optimizer=optimizers.SGD()) :
         """
         Takes all of the layers and connects them together, prepares the network
         to be run. 
@@ -42,21 +51,29 @@ class Model :
         """
         # symbolically run through the entire network
         temp_x = self.inputs
-        for layer in layers :
-            temp_x = layer.feed(output)
+        for layer in self.layers :
+            temp_x = layer.feed(temp_x)
 
         # self.feed_forward hold the symbolic result for an output given an input
         self.feed_forward = temp_x
-        self.costfn = self.get_costfn(costfn)
+
+        self.costfn = optimizer.compile(self.feed_forward, self.outputs)
+        updates = optimizer.updates(self.layers)
         
         # define a symbolic training iteration based on the input and output data,
         # the cost function, and the update algorithm defined in the optimizer class
         self._train = theano.function(
             inputs=[self.inputs, self.outputs],
             outputs=self.costfn,
-            updates=optimizer.updates(self.layers, self.feed_forward, self.costfn)
+            updates=updates,
+            name="train"
         )
 
+        self._evaluate = theano.function(
+            inputs=[self.inputs, self.outputs],
+            outputs=[self.costfn, self.feed_forward], # grab the cost and the raw output for 
+            name="evaluate"                           # the evaluation steps 
+        )
     def train(self, data, targets, batchsize=10, nepochs=10, verbose=False) :
         """
         data - numpy style input data
@@ -64,15 +81,22 @@ class Model :
         batchsize - iterations done before weight update
         nepochs - number of epochs to train for
         """
-        pass    
+        for epoch in range(nepochs) :
+            toterr = 0 
+            for ind, datum in enumerate(data) :
+                loss = self._train(
+                        datum.astype(np.float32).T,
+                        targets[ind].astype(np.float32)
+                )
+                toterr += loss
+                print loss
+            print "Loss for Epoch %s : %s " % (epoch, toterr/len(data))
+
+        print "fuck"
+
 
     def predict(self, data) :
         pass
-
-    def get_costfn(self, costfn) :
-        if costfn == "MSE" :
-            err = self.feed_forward - self.outputs
-            return T.dot(err, err.T)
 
     def load_model(self, fn) :
         pass 

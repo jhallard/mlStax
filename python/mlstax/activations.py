@@ -37,6 +37,6 @@ class Softmax(Activation) :
     def activate(self, data) :
         return T.nnet.softmax(data)
 
-class None(Activation) :
+class Nothing(Activation) :
     def activate(self, data) :
         return data
