@@ -16,4 +16,27 @@ class Activation(object) :
     hierarchy so that people can submit custom functions and so we can stack
     them more easily
     """
-    def __init__(self) :
+
+    def activate(self, data) :
+        """ override this to use your activation function on the given input """
+        pass
+
+class Sigmoid(Activation) :
+    def activate(self, data) :
+        return T.nnet.sigmoid(data)
+
+class Tanh(Activation) :
+    def activate(self, data) :
+        return T.tanh(data)
+
+class ReLU(Activation) :
+    def activate(self, data) :
+        return T.nnet.relu(data)
+
+class Softmax(Activation) :
+    def activate(self, data) :
+        return T.nnet.softmax(data)
+
+class None(Activation) :
+    def activate(self, data) :
+        return data

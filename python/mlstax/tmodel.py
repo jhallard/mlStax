@@ -14,7 +14,11 @@ class Model :
     """
     def __init__(self, input_dim, layers=[]) :
         self.indim = input_dim
-        self.layers = layers
+        self.input = T.vector('input')
+        self.output = T.vector('output')
+        self.feed_forward = None # defined on call to compile()
+        for layer in layers :
+            self.push_layer(layer)
 
     def push_layer(self, layer) :
         """
@@ -25,15 +29,31 @@ class Model :
             raise ValueError("Layer Sizing Mismatch.\n Layers : %s --> %s" %
                         (str(self.layers[-1]), str(layer))
                    )
+        layer.init_weights(indim=self.layers[-1].size)
         layer.lnum = len(self.layers)+1
         self.layers.append(layer)
 
-    def compile(self, optimizer) :
+    def compile(self, optimizer=optimizer.SGD) :
         """
         Takes all of the layers and connects them together, prepares the network
-        to be run. We need a valid instance of the optimizer class.
+        to be run. 
+        @optimizer - instance of the optimizer class hierarchy
         """
-        pass
+        temp_x = self.input
+        for layer in layers :
+            temp_x = layer.feed(output)
+
+        # self.feed_forward hold the symbolic result for an output given an input
+        self.feed_forward = temp_x
+        self.cost = optimizer.costfn(self.feed_forward)
+        
+        # define a symbolic training iteration based on the input and output data,
+        # the cost function, and the update algorithm defined in the optimizer class
+        self._train = theano.function(
+            inputs=[self.inputs, self.outputs],
+            outputs=self.cost,
+            updates=optimizer.updates(self.layers)
+        )
 
     def train(self, data, targets, batchsize=10, nepochs=10, verbose=False) :
         """
