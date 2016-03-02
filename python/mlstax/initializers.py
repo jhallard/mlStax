@@ -76,7 +76,7 @@ def Zeros(Initializer) :
         super(Uniform, self).__init__(self)
 
     def init_weights(self, size) :
-        return np.zeros(size)
+        return np.zeros(size, dtype=theano.config.floatX)
 
 
 def Ones(Initializer) :
@@ -87,4 +87,4 @@ def Ones(Initializer) :
         super(Uniform, self).__init__(self)
 
     def init_weights(self, size) :
-        return np.ones(size)
+        return np.ones(size, dtype=theano.config.floatX)

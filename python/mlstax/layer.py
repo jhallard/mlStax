@@ -32,7 +32,9 @@ class Layer(object) :
         pass
 
     def init_weights(self, indim) :
-        self.Wh, self.bias = init.init_weights(self.size, indim)
+        self.weights, self.bias = init.init_weights(self.size, indim)
+        self.weights = theano.shared(value=self.weights, name='weights', borrow=True)
+        self.bias = theano.shared(value=self.bias, name='bias', borrow=True)
 
 
 class Dense(Layer) :

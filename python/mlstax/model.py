@@ -14,9 +14,11 @@ class Model :
     """
     def __init__(self, input_dim, layers=[]) :
         self.indim = input_dim
-        self.input = T.vector('input')
-        self.output = T.vector('output')
+        self.inputs = T.vector('inputs')
+        self.outputs = T.vector('outputs')
         self.feed_forward = None # defined on call to compile()
+        self.costfn = None # symbolic cost function for the network
+        self.layers = []
         for layer in layers :
             self.push_layer(layer)
 
@@ -25,34 +27,34 @@ class Model :
         Add a new hidden layer to the network. 
         input must be a valid instance of a class in the Layer hierarchy
         """
-        if self.layers and self.layers[-1].size != layer.input_dim:
-            raise ValueError("Layer Sizing Mismatch.\n Layers : %s --> %s" %
-                        (str(self.layers[-1]), str(layer))
-                   )
-        layer.init_weights(indim=self.layers[-1].size)
+        if self.layers :
+            layer.init_weights(indim=self.layers[-1].size)
+        else :
+            layer.init_weights(indim=self.indim)
         layer.lnum = len(self.layers)+1
         self.layers.append(layer)
 
-    def compile(self, optimizer=optimizer.SGD) :
+    def compile(self, optimizer=optimizer.SGD, costfn="MSE") :
         """
         Takes all of the layers and connects them together, prepares the network
         to be run. 
         @optimizer - instance of the optimizer class hierarchy
         """
-        temp_x = self.input
+        # symbolically run through the entire network
+        temp_x = self.inputs
         for layer in layers :
             temp_x = layer.feed(output)
 
         # self.feed_forward hold the symbolic result for an output given an input
         self.feed_forward = temp_x
-        self.cost = optimizer.costfn(self.feed_forward)
+        self.costfn = self.get_costfn(costfn)
         
         # define a symbolic training iteration based on the input and output data,
         # the cost function, and the update algorithm defined in the optimizer class
         self._train = theano.function(
             inputs=[self.inputs, self.outputs],
-            outputs=self.cost,
-            updates=optimizer.updates(self.layers)
+            outputs=self.costfn,
+            updates=optimizer.updates(self.layers, self.feed_forward, self.costfn)
         )
 
     def train(self, data, targets, batchsize=10, nepochs=10, verbose=False) :
@@ -62,34 +64,15 @@ class Model :
         batchsize - iterations done before weight update
         nepochs - number of epochs to train for
         """
-        for epoch in range(nepochs) :
-            toterr = 0
-            for ind, datum in enumerate(data) :
-                output = np.array([datum]).T
-                for i, layer in enumerate(self.layers) :
-                    output = layer.feed(output)
-                error = output - targets[ind]
-                loss = 0.5*(np.array(error).dot(np.array(error).T)[0][0])
-                toterr += abs(loss)
-
-                for i, layer in enumerate(self.layers[::-1]) :
-                    error = layer.bprop(error)
-
-                if ind != 0 and ind % batchsize == 0 :
-                    for layer in self.layers :
-                        layer.update()
-
-            print "Loss for Epoch %s : %.6f" % (epoch, toterr/len(data))
-                
+        pass    
 
     def predict(self, data) :
-        retval = []
-        for ind, datum in enumerate(data) :
-            output = np.array([datum]).T
-            for i, layer in enumerate(self.layers) :
-                output = layer.feed(output)
-            retval.append(output)
-        return retval
+        pass
+
+    def get_costfn(self, costfn) :
+        if costfn == "MSE" :
+            err = self.feed_forward - self.outputs
+            return T.dot(err, err.T)
 
     def load_model(self, fn) :
         pass 
