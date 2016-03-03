@@ -88,7 +88,7 @@ class Model :
             toterr = 0.0
             for ind, datum in enumerate(data) :
                 loss = self._train(
-                        datum.astype(np.float32).T,
+                        datum.astype(np.float32),
                         targets[ind].astype(np.float32)
                 )
                 toterr += loss

@@ -70,12 +70,14 @@ if __name__ == '__main__' :
 
     print str(mm)
 
+    print "Compiling Model\n\n"
     mm.compile()
 
-    print "Beginning training session\n"
+    print "Beginning training session\n\n"
 
     mm.train(indat, targets, 1, epochs)
 
+    print "Submit inputs for evaluation (1 per line, then EOF)\n\n"
     for line in sys.stdin:
         inp = [float(x) for x in line.strip().split(' ')]
         print mm.predict(np.array([inp]))

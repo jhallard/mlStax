@@ -55,7 +55,7 @@ class SGD(Optimizer) :
     def compile(self, outputs, labels) :
         if self.costfn_str == "MSE" :
             err = outputs - labels
-            self.costfn = T.dot(err.T, err)[0][0]
+            self.costfn = T.dot(err, err)[0][0]
             return self.costfn
         return None
 

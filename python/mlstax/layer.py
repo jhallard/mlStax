@@ -36,8 +36,8 @@ class Layer(object) :
         pass
 
     def init_weights(self, indim) :
-        self.weights = self.init.init_weights((self.size, indim))
-        self.bias = initializers.Zeros().init_weights((self.size, 1))
+        self.weights = self.init.init_weights((indim, self.size)) #((self.size, indim))
+        self.bias = initializers.Zeros().init_weights((1, self.size))
         self.weights = theano.shared(value=self.weights, name='weights', borrow=True)
         self.bias = theano.shared(value=self.bias, name='bias', borrow=True)
 
@@ -51,7 +51,7 @@ class Dense(Layer) :
         self.lname = "Dense"
 
     def feed(self, data) :
-        return self.activation.activate(T.dot(self.weights, data) + self.bias)
+        return self.activation.activate(T.dot(data, self.weights) + self.bias)
 
 # class Convolutional(Dense) :
     # # @TODO
