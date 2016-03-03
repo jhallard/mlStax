@@ -92,7 +92,7 @@ class Model :
                         targets[ind].astype(np.float32)
                 )
                 toterr += loss
-                print loss
+                # print loss
             print "Loss for Epoch %s : %s " % (epoch, toterr/len(data))
 
         print "fuck"

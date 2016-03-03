@@ -28,8 +28,8 @@ class Layer(object) :
         self.weights = None 
         self.bias = None
         self.size = size
-        self.init = init if init else initializers.Uniform(-1, 1)
-        self.activation = activation if activation else activations.Sigmoid()
+        self.init = init if init else initializers.Uniform(-0.3, 0.3)
+        self.activation = activation if activation else activations.Tanh()
 
     def feed(self, data) :
         """ returns a theano equation defining the output of this layer given data """

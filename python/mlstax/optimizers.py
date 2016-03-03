@@ -9,10 +9,6 @@ import theano.tensor.nnet as nnet
 import numpy as np
 import time
 
-def mse(out, labels) :
-    error = out - labels
-    return T.dot(error, error.T)
-
 class Optimizer(object) :
     """
     defines a algorithm/method for optimizing the parameters of
@@ -47,15 +43,15 @@ class SGD(Optimizer) :
     Performs simple stochastic gradient descent on a network with a given learning rate,
     you can also add in a momentum parameter should you feel so inclined.
     """
-    def __init__(self, costfn="MSE", lr=0.25, rho=0) :
+    def __init__(self, costfn="MSE", lr=0.05, rho=0) :
         super(SGD, self).__init__(costfn)
         self.learn_rate = lr
         self.momentum = rho
 
     def compile(self, outputs, labels) :
         if self.costfn_str == "MSE" :
-            err = outputs - labels
-            self.costfn = T.dot(err, err)[0][0]
+            err = labels - outputs
+            self.costfn = T.dot(err, err.T)[0][0]
             return self.costfn
         return None
 
@@ -72,6 +68,5 @@ class SGD(Optimizer) :
         """ 
         perform a single sgd update on the given weights using their gradient with respect
         to the error
-        @TODO implement momentum yo
         """
         return weights - (self.learn_rate*T.grad(self.costfn, weights))

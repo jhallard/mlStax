@@ -10,7 +10,7 @@ import sys
 from sys import stdin
 
 sys.path.append("../")
-sys.path.append("../mlstax")
+sys.path.append("../mlstax_np")
 sys.path.append("../../")
 
 import model, layer 
