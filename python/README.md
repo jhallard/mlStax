@@ -1,6 +1,7 @@
-LSTMs in C++
-========
+mlStax in Python
+================
 
-This is 1/3rd of my final project for CS112 Comparative Programming Languages at UCSC, Winter Quarter 2016. Here I implement an API for creating and using LSTMs in Python. I have made two other implementations, one in C++ and the other in Haskell, which can also be found in this repository.
+This is the top level directory for the python implementation of mlStax. In `mlstax_np` is an older version that relies only on numpy and does use theano, `mlstax` is the new version.
 
+Right now there is some simple testing code in the `tests` directory but not much, I'll be adding some actual good unit tests later.
 

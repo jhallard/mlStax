@@ -60,8 +60,6 @@ class Model :
         self.costfn = optimizer.compile(self.feed_forward, self.outputs)
         updates = optimizer.updates(self.layers)
 
-        print updates
-        
         # define a symbolic training iteration based on the input and output data,
         # the cost function, and the update algorithm defined in the optimizer class
         self._train = theano.function(

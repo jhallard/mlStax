@@ -20,7 +20,6 @@ enum class Activation {
 }
 
 
-
 // base class for the Layer hierarchy
 class Layer {
     

@@ -29,7 +29,7 @@ class Layer(object) :
         self.bias = None
         self.size = size
         self.init = init if init else initializers.Uniform(-0.3, 0.3)
-        self.activation = activation if activation else activations.Tanh()
+        self.activation = activation if activation else activations.ReLU()
 
     def feed(self, data) :
         """ returns a theano equation defining the output of this layer given data """
@@ -37,7 +37,7 @@ class Layer(object) :
 
     def init_weights(self, indim) :
         self.weights = self.init.init_weights((indim, self.size)) #((self.size, indim))
-        self.bias = initializers.Zeros().init_weights((1, self.size))
+        self.bias = initializers.Uniform(-0.3, 0.3).init_weights((1, self.size))
         self.weights = theano.shared(value=self.weights, name='weights', borrow=True)
         self.bias = theano.shared(value=self.bias, name='bias', borrow=True)
 

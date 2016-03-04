@@ -43,15 +43,14 @@ class SGD(Optimizer) :
     Performs simple stochastic gradient descent on a network with a given learning rate,
     you can also add in a momentum parameter should you feel so inclined.
     """
-    def __init__(self, costfn="MSE", lr=0.05, rho=0) :
+    def __init__(self, costfn="MSE", lr=0.15, rho=0) :
         super(SGD, self).__init__(costfn)
         self.learn_rate = lr
         self.momentum = rho
 
     def compile(self, outputs, labels) :
         if self.costfn_str == "MSE" :
-            err = labels - outputs
-            self.costfn = T.dot(err, err.T)[0][0]
+            self.costfn = (0.5*(outputs-labels)**2)[0][0]
             return self.costfn
         return None
 
