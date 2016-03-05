@@ -38,6 +38,8 @@ public :
 
     std::vector<Eigen::Vector2d> predict(std::vector<Eigen::Vector2d> * indat);
 
+    std::string tostr() const; // maybe I should just override cout operator?
+
     bool save_weights(const std::string fn) const;
     bool load_weights(const std::string fn);
 

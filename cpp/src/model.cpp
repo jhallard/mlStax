@@ -9,8 +9,8 @@
  * */
 #include "model.h"
 
-Model::Model(int input_dim) m_input_dim(input_dim) {
-  m_layers = {};
+Model::Model(int input_dim) m_input_dim(input_dim, std::vector<Layer*> layers) {
+  m_layers = layers;
 }
 
 bool Model::push_layer(Layer * layer) {
