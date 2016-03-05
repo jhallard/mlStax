@@ -22,7 +22,7 @@ namespace mlstax {
 class Activation {
 public:
     virtual Activation() = 0;
-    virtual void activate(Eigen::MatrixXf *) = 0;
+    virtual void activate(Eigen::MatrixXd *) = 0;
 };
 
 // @class : Sigmoid
@@ -40,7 +40,7 @@ public:
 class ReLU : public activation {
 public:
     virtual relu();
-    virtual void activate(eigen::matrixxd * inmat);
+    virtual void activate(eigen::MatrixXd * inmat);
 }
 
 // @class : Tanh
@@ -49,7 +49,7 @@ public:
 class Tanh : public activation {
 public:
     virtual relu();
-    virtual void activate(eigen::matrixxd * inmat);
+    virtual void activate(eigen::MatrixXd * inmat);
 }
 
 } // endnamespace
