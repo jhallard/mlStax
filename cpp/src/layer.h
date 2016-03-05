@@ -17,38 +17,30 @@
 
 #include <Eigen/Dense>
 
-enum class Initializer {
-    uniform,
-    normal, 
-    zero
-};
-enum class Activation {
-    tanh,
-    sigmoid,
-    relu
-}
-
-
+namespace mlstax {
 // base class for the Layer hierarchy
 class Layer {
     
 public :
 
     virtual Layer(int layer_size, int input_dim, 
-                    Initializer init = Initializer::normal, 
-                    Activation act = Activation::sigmoid);
+        Initializer init = Normal, 
+        Activation act = Sigmoid()
+    );
 
     virtual bool feed(Eigen::Vector2d data) = 0;
 
-    virtual bool bprop(Eigen::MatrixXf error, bool verbose=false) = 0;
+    virtual bool bprop(Eigen::MatrixXd error, bool verbose=false) = 0;
 
 private :
-    int input_dim;
-    int layer_size; 
-    std::string lname;
-    Initializer init;
-    Activations activation;
 
+    // Initializer and Activation function-objects for this specific layer
+    std::unique_ptr<Initializer> * activation;
+    std::unique_ptr<Activation> * activation;
+    int input_dim, layer_size; 
+    std::string lname;
 }
+
+} // end namespace mlstax
 
 #endif

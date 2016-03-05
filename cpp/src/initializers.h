@@ -18,13 +18,15 @@
 
 #include <Eigen/Dense>
 
+namespace mlstax {
+
 // @class : Initializer
 // @description : Abstract base class, all instances of this hierarchy can be used to
 // initialize a given Eigen matrix to certiain values.
 class Initializer {
 public :
     vitual Initializer() = 0;
-    virtual void init_weights(Eigen::MatrixXf * inmat) = 0;
+    virtual void init_weights(Eigen::MatrixXd * inmat) = 0;
 };
 
 
@@ -37,7 +39,7 @@ private :
     std::mt19937 eng;
 public :
     virtual Initializer(double mean = 0, double stddev = 1.0);
-    virtual void init_weights(Eigen::MatrixXf * inmat) = 0;
+    virtual void init_weights(Eigen::MatrixXd * inmat) = 0;
 };
 
 // @class : Uniform
@@ -49,7 +51,7 @@ private :
     std::mt19937 eng;
 public :
     virtual Initializer(double max = -1.0, double min = 1.0);
-    virtual void init_weights(Eigen::MatrixXf * inmat);
+    virtual void init_weights(Eigen::MatrixXd * inmat);
 };
 
 // @class : Constant 
@@ -59,7 +61,9 @@ private:
     float const_val;
 public :
     virtual Initializer(float const_val);
-    virtual void init_weights(Eigen::MatrixXf * inmat);
+    virtual void init_weights(Eigen::MatrixXd * inmat);
 };
+
+} // end namespace mlstax
 
 #endif

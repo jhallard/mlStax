@@ -16,6 +16,8 @@
 
 #include <Eigen/Dense>
 
+namespace mlstax {
+
 class Model {
 
 public :
@@ -34,6 +36,8 @@ private :
 
     int _input_dim;
     std::vector<Layer> _layers;
+}
+
 }
 
 #endif
