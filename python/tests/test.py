@@ -66,7 +66,7 @@ if __name__ == '__main__' :
     mm = model.Model(indim)
     for ldim in layer_dims :
         mm.push_layer(layer.Dense(ldim))
-    mm.push_layer(layer.Dense(outdim, activation=activations.Nothing))
+    mm.push_layer(layer.Dense(outdim, activation=activations.Sigmoid()))
 
     print str(mm)
 

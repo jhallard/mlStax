@@ -6,7 +6,7 @@ if __name__ == '__main__' :
     numdim = 5
     if len(sys.argv) > 1 :
         numdim = int(sys.argv[1])
-    X = np.random.rand(16*10000, numdim)
+    X = np.random.rand(2*10000, numdim)
     F = np.random.rand(1, numdim)*2
     Y = np.dot(X, F.T)
     print "%s %s %s %s %s" % (numdim, 24, 48, 32,  1)
