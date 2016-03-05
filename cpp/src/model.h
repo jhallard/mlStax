@@ -23,8 +23,20 @@ class Model {
 public :
     Model(int input_dim, std::vector<Layer> layers = {});
 
-    bool push_layer(Layer layer);
+    bool push_layer(Layer * layer);
     std::vector<Layer> get_layers() const;
+
+    std::vector<std::string> train(std::vector<Eigen::Vector2d> & indat, 
+           std::vector<Eigen::Vector2d> * targets,
+           uint batchsize = 10, uint nepochs = 10, verbose=false
+    ); 
+
+    std::vector<std::string> evaluate(std::vector<Eigen::Vector2d> & indat, 
+           std::vector<Eigen::Vector2d> * targets,
+           verbose=false
+    ); 
+
+    std::vector<Eigen::Vector2d> predict(std::vector<Eigen::Vector2d> * indat);
 
     bool save_weights(const std::string fn) const;
     bool load_weights(const std::string fn);
@@ -34,8 +46,8 @@ public :
 
 private :
 
-    int _input_dim;
-    std::vector<Layer> _layers;
+    int m_input_dim;
+    std::vector<Layer*> m_layers;
 }
 
 }

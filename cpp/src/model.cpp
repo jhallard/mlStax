@@ -9,3 +9,26 @@
  * */
 #include "model.h"
 
+Model::Model(int input_dim) m_input_dim(input_dim) {
+  m_layers = {};
+}
+
+bool Model::push_layer(Layer * layer) {
+
+    if(!m_layers.size()) {
+        if(layer->get_input_dim() != self.input_dim) {
+            // @TODO raise proper sizing error message / exception
+            return false;
+        }
+        self.m_layers.push_back(layer);
+        return true;
+    }
+    else {
+        if(layer->get_input_dim() != self.layers.back()->get_layer_size()) {
+            // @TODO raise proper sizing error message / exception
+            return false;
+        }
+        self.m_layers.push_back(layer);
+        return true;
+    }
+}
