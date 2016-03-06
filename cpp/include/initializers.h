@@ -25,7 +25,6 @@ namespace mlstax {
 // initialize a given Eigen matrix to certiain values.
 class Initializer {
 public :
-    vitual Initializer() = 0;
     virtual void init_weights(Eigen::MatrixXd * inmat) = 0;
 };
 
@@ -38,7 +37,7 @@ private :
     std::random_device rd;
     std::mt19937 eng;
 public :
-    virtual Initializer(double mean = 0, double stddev = 1.0);
+    Normal(double mean = 0, double stddev = 1.0);
     virtual void init_weights(Eigen::MatrixXd * inmat) = 0;
 };
 
@@ -50,7 +49,7 @@ private :
     std::random_device rd;
     std::mt19937 eng;
 public :
-    virtual Initializer(double max = -1.0, double min = 1.0);
+    Uniform(double max = -1.0, double min = 1.0);
     virtual void init_weights(Eigen::MatrixXd * inmat);
 };
 
@@ -60,7 +59,7 @@ class Constant : public Initializer {
 private:
     float const_val;
 public :
-    virtual Initializer(float const_val);
+    Constant(float const_val);
     virtual void init_weights(Eigen::MatrixXd * inmat);
 };
 

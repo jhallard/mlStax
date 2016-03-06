@@ -21,7 +21,6 @@ namespace mlstax {
 
 class Activation {
 public:
-    virtual Activation() = 0;
     virtual void activate(Eigen::MatrixXd *) = 0;
 };
 
@@ -30,27 +29,27 @@ public:
 // Eigen MatrixXd. 
 class Sigmoid : public Activation {
 public:
-    virtual Sigmoid();
+    Sigmoid();
     virtual void activate(Eigen::MatrixXd * inmat);
-}
+};
 
 // @class :relu 
 // @info  : performs the rectified linear-unit function elementwise over 
 // a given eigen matrixxd. 
-class ReLU : public activation {
+class ReLU : public Activation {
 public:
-    virtual relu();
-    virtual void activate(eigen::MatrixXd * inmat);
-}
+    ReLU();
+    virtual void activate(Eigen::MatrixXd * inmat);
+};
 
 // @class : Tanh
 // @info  : performs the hyperbolic tangent function elementwise over
 // a given eigen matrixxd. 
-class Tanh : public activation {
+class Tanh : public Activation {
 public:
-    virtual relu();
-    virtual void activate(eigen::MatrixXd * inmat);
-}
+    Tanh();
+    virtual void activate(Eigen::MatrixXd * inmat);
+};
 
 } // endnamespace
 

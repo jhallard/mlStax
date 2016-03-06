@@ -18,9 +18,15 @@
 
 #include <Eigen/Dense>
 
+#include "layer.h"
+#include "initializers.h"
+#include "activations.h"
+
 namespace mlstax {
+
 // base class for the Layer hierarchy
 class Dense : public Layer {
+
 public :
 
     /*
@@ -59,3 +65,5 @@ public :
 private :
 
 };
+
+#endif
