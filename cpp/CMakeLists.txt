@@ -13,7 +13,7 @@ ENDIF()
 INCLUDE_DIRECTORIES ( "${EIGEN3_INCLUDE_DIR}" )
 include_directories(include)
 
-file(GLOB SOURCES "src/*.cpp")
+file(GLOB SOURCES "src/*.cpp" "src/*.h")
 
 #Generate the shared library from the sources
 add_library(mlstax SHARED ${SOURCES})
@@ -21,3 +21,5 @@ add_library(mlstax SHARED ${SOURCES})
 install(TARGETS mlstax DESTINATION /usr/lib)
 
 add_executable(tests/unit_tests tests/unit_tests.cpp)
+
+target_link_libraries(tests/unit_tests mlstax)

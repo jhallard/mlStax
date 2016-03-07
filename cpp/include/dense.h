@@ -23,10 +23,9 @@
 #include "activations.h"
 
 namespace mlstax {
-using namespace mlstax;
 
 // base class for the Layer hierarchy
-class Dense : public mlstax::Layer {
+class Dense : public Layer {
 
 public :
 

@@ -17,13 +17,15 @@
 
 using namespace mlstax;
 using namespace std;
+
 // @test : model_construct
 // @info : simply construct a model with no layers and return true if nothing breaks
 bool model_construct() {
     try {
         Model mm = Model(12);
+        cout << "Model Created." << endl;
     } catch(...) {
-        std::cerr << "Model Construction Failed (model_construct)" << endl;
+        cerr << "Model Construction Failed (model_construct)" << endl;
         return false;
     }
     return true;
@@ -36,12 +38,15 @@ bool add_layers() {
         Model mm = Model(12);
         Dense * layer = new Dense(20, 12); // use default inti and activations
         mm.push_layer(layer);
+        cout << "Model Created and Layer Added" << endl;
         return true;
     } catch(...) {
-        std::cerr << "Adding Dense Layer to Model Failed (add_layers)" << endl;
+        cerr << "Adding Dense Layer to Model Failed (add_layers)" << endl;
         return false;
     }
+}
 
-int main(int *argv, char **argv) {
+int main(int argc, char **argv) {
+    cout << "Starting Unit Tests :" << endl;
     return model_construct() && add_layers();
 }

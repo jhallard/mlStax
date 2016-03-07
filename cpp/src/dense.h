@@ -2,31 +2,32 @@
  * Author  - John Allard
  * Date    - Feb 27th 2016
  * License - MIT
- * Description - This file contains the declaration of the base Layer class. This
- *  is an abstract base class that must be derived from to implement a legitimate
- *  network to be used by the Model class. Examples of child classes are the Dense
- *  and RNN layers defined in their respective files.
+ * Description - This file contains the declaration of the Dense Layer class.
+ * This class is a member of the Layer hierarchy, and it implements a dense
+ * (i.e. fully connected) connection of weights between the nodes at this layer
+ * and the output of the nodes at the previous layer. It represent the 'standard'
+ * layer in a feed-forward neural network.
  * */
-#ifndef MLSTAX_LAYER_H
-#define MLSTAX_LAYER_H
+#ifndef MLSTAX_DENSE_H
+#define MLSTAX_DENSE_H
 
 
 #include <vector>
 #include <map>
-#include <memory>
 #include <iostream>
 
 #include <Eigen/Dense>
 
+#include "layer.h"
 #include "initializers.h"
 #include "activations.h"
 
 namespace mlstax {
+using namespace mlstax;
 
-// @class : Layer
-// @info  : base class for the Layer hierarchy
-class Layer {
-    
+// base class for the Layer hierarchy
+class Dense : public mlstax::Layer {
+
 public :
 
     /*
@@ -35,7 +36,7 @@ public :
               init - instance of the Initializer hierarchy, used to initialize the weights for this layer
               act  - Activation function to be applied to the output of this layer.
     */
-    Layer(uint layer_size, uint input_dim, Initializer * init = nullptr, Activation * act = nullptr);
+    Dense(uint layer_size, uint input_dim, Initializer * init = nullptr, Activation * act = nullptr);
 
     /*
     * @fn   : feed
@@ -43,7 +44,7 @@ public :
     * @ret  : Eigen::Vector2d, the output of this layer's transformation
     * @desc : feeds a vector of data through this layer and returns the output of the transformation
     */
-    virtual bool feed(Eigen::Vector2d * data) = 0;
+    virtual bool feed(Eigen::Vector2d * data);
 
     /*
     * @fn   : bprop
@@ -52,7 +53,7 @@ public :
     * @desc : Takes an error from the next layer and computes it's gradient, then returns it's delta for the
     *         previous layer to make use of 
     */
-    virtual bool bprop(Eigen::MatrixXd * error, bool verbose=false) = 0;
+    virtual bool bprop(Eigen::MatrixXd * error, bool verbose=false);
     
     /*
     * @fn   : update
@@ -60,29 +61,9 @@ public :
     * @ret  : nothing (always true for now)
     * @desc : uses the internally saved gradient information and performs the relevant update step.
     */
-    virtual bool update() = 0;
-
-    uint get_input_dim() const;
-    uint get_layer_size() const;
-
-    bool set_input_dim(uint indim);
-    bool set_layer_size(uint lsize);
-
-    // see http://eigen.tuxfamily.org/dox/group__TopicStructHavingEigenMembers.html
-    // for explanation, tl;dr we need this for alignment so Eigen can use SIMD, w/o 
-    // this we can get segfault on Layer * x = new Layer();
-    EIGEN_MAKE_ALIGNED_OPERATOR_NEW
+    virtual bool update();
 
 private :
-
-    // Initializer and Activation function-objects for this specific layer
-    std::unique_ptr<Initializer> m_initializer;
-    std::unique_ptr<Activation> m_activation;
-
-    Eigen::Vector2d m_last_input; // last input to layer used for grad. descent
-
-    uint m_input_dim, m_layer_size; 
-    std::string lname;
 };
 
 } // end namespace mlstax

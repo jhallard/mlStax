@@ -7,6 +7,7 @@
  */
 
 #include "layer.h"
+
 using namespace mlstax;
 
 Layer::Layer(uint layer_size, uint input_dim, Initializer * init, Activation * act) 

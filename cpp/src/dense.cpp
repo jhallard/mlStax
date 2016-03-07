@@ -7,6 +7,7 @@
  */
 
 #include "dense.h"
+
 using namespace mlstax;
 
 Dense::Dense(uint layer_size, uint input_dim, Initializer * init, Activation * act) 
@@ -18,6 +19,10 @@ bool Dense::feed(Eigen::Vector2d * indat) {
 }
 
 bool Dense::bprop(Eigen::MatrixXd * error, bool verbose) {
+    return true;
+}
+
+bool Dense::update() {
     return true;
 }
 

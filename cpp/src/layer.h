@@ -22,6 +22,7 @@
 #include "activations.h"
 
 namespace mlstax {
+using namespace mlstax;
 
 // @class : Layer
 // @info  : base class for the Layer hierarchy

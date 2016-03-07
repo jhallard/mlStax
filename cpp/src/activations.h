@@ -18,6 +18,7 @@
 #include <Eigen/Dense>
 
 namespace mlstax {
+using namespace mlstax;
 
 class Activation {
 public:

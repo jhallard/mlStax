@@ -19,6 +19,7 @@
 #include <Eigen/Dense>
 
 namespace mlstax {
+using namespace mlstax;
 
 // @class : Initializer
 // @description : Abstract base class, all instances of this hierarchy can be used to
