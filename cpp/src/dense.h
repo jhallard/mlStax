@@ -41,10 +41,10 @@ public :
     /*
     * @fn   : feed
     * @args : `data` - input vector of data to this layer.
-    * @ret  : Eigen::Vector2d, the output of this layer's transformation
+    * @ret  : Eigen::VectorXd, the output of this layer's transformation
     * @desc : feeds a vector of data through this layer and returns the output of the transformation
     */
-    virtual bool feed(std::shared_ptr<Eigen::Vector2d> data);
+    virtual bool feed(std::shared_ptr<Eigen::VectorXd> data);
 
     /*
     * @fn   : bprop
@@ -64,6 +64,22 @@ public :
     virtual bool update();
 
 private :
+
+	Eigen::MatrixXd m_weights;
+	Eigen::MatrixXd m_dweights;
+
+	Eigen::VectorXd m_bias;
+	Eigen::VectorXd m_dbias;
+
+	/*std::shared_ptr<Eigen::MatrixXd> m_weights;
+	std::shared_ptr<Eigen::MatrixXd> m_dweights;
+	std::shared_ptr<Eigen::VectorXd> m_bias;
+	std::shared_ptr<Eigen::VectorXd> m_dbias;*/
+
+
+    Eigen::VectorXd m_last_input; 
+	Eigen::VectorXd m_hidden_state;
+	
 };
 
 } // end namespace mlstax

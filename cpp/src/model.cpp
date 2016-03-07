@@ -38,8 +38,8 @@ std::vector<Layer*> Model::get_layers() const {
     return this->m_layers;
 }
 
-std::vector<EpochResult> Model::train(std::vector<Eigen::Vector2d> & indat,
-        std::vector<Eigen::Vector2d> & targets,
+std::vector<EpochResult> Model::train(std::vector<Eigen::VectorXd> & indat,
+        std::vector<Eigen::VectorXd> & targets,
         uint batchsize, uint nepochs, bool verbose) {
 
     std::vector<EpochResult> results = {};
@@ -49,8 +49,8 @@ std::vector<EpochResult> Model::train(std::vector<Eigen::Vector2d> & indat,
     return results;
 }
 
-std::vector<EpochResult> Model::evaluate(std::vector<Eigen::Vector2d> & indat,
-        std::vector<Eigen::Vector2d> & targets, bool verbose) {
+std::vector<EpochResult> Model::evaluate(std::vector<Eigen::VectorXd> & indat,
+        std::vector<Eigen::VectorXd> & targets, bool verbose) {
 
     std::vector<EpochResult> results = {};
 

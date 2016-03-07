@@ -45,10 +45,10 @@ public :
     /*
     * @fn   : feed
     * @args : `data` - input vector of data to this layer.
-    * @ret  : Eigen::Vector2d, the output of this layer's transformation
+    * @ret  : Eigen::VectorXd, the output of this layer's transformation
     * @desc : feeds a vector of data through this layer and returns the output of the transformation
     */
-    virtual bool feed(std::shared_ptr<Eigen::Vector2d> ata) = 0;
+    virtual bool feed(std::shared_ptr<Eigen::VectorXd> data) = 0;
 
     /*
     * @fn   : bprop
@@ -84,8 +84,6 @@ protected :
     // Initializer and Activation function-objects for this specific layer
     std::unique_ptr<Initializer> m_initializer;
     std::unique_ptr<Activation> m_activation;
-
-    std::shared_ptr<Eigen::Vector2d> m_last_input; // last input to layer used for grad. descent
 
     uint m_input_dim, m_layer_size; 
     std::string m_name;

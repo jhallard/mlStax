@@ -36,17 +36,17 @@ public :
     bool push_layer(Layer * layer);
     std::vector<Layer*> get_layers() const;
 
-    std::vector<EpochResult> train(std::vector<Eigen::Vector2d> & indat, 
-           std::vector<Eigen::Vector2d> & targets,
+    std::vector<EpochResult> train(std::vector<Eigen::VectorXd> & indat, 
+           std::vector<Eigen::VectorXd> & targets,
            uint batchsize = 10, uint nepochs = 10, bool verbose=false
     ); 
 
-    std::vector<EpochResult> evaluate(std::vector<Eigen::Vector2d> & indat, 
-           std::vector<Eigen::Vector2d> & targets,
+    std::vector<EpochResult> evaluate(std::vector<Eigen::VectorXd> & indat, 
+           std::vector<Eigen::VectorXd> & targets,
            bool verbose=false
     ); 
 
-    std::vector<Eigen::Vector2d> predict(std::vector<Eigen::Vector2d> & indat);
+    std::vector<Eigen::VectorXd> predict(std::vector<Eigen::VectorXd> & indat);
 
     bool save_weights(const std::string fn) const;
     bool load_weights(const std::string fn);

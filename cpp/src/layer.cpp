@@ -15,7 +15,6 @@ Layer::Layer(uint layer_size, uint input_dim, Initializer * init, Activation * a
     : m_layer_size(layer_size), m_input_dim(input_dim),
       m_initializer(init),
       m_activation(act),
-      m_last_input(nullptr),
       m_name("")
 {} 
 
@@ -43,4 +42,4 @@ std::ostream& operator<<(std::ostream& os, const Layer& layer) {
     return os;
 }
 
-}
+} // end namespace
