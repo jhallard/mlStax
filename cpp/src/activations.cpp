@@ -18,19 +18,19 @@ std::string Activation::get_name() const {
     return m_name;
 }
 
-void Sigmoid::activate(Eigen::MatrixXd * inmat) {
+void Sigmoid::activate(std::shared_ptr<Eigen::VectorXd> inmat) {
 
 }
 
 
-void ReLU::activate(Eigen::MatrixXd * inmat) {
+void ReLU::activate(std::shared_ptr<Eigen::VectorXd> inmat) {
 
 }
 
-void Tanh::activate(Eigen::MatrixXd * inmat) {
+void Tanh::activate(std::shared_ptr<Eigen::VectorXd> inmat) {
 
 }
 
-void Nothing::activate(Eigen::MatrixXd * inmat) {
+void Nothing::activate(std::shared_ptr<Eigen::VectorXd> inmat) {
 
 }

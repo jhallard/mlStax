@@ -11,7 +11,7 @@
 namespace mlstax {
 
 Dense::Dense(uint layer_size, uint input_dim, Initializer * init, Activation * act) 
-    : Layer(layer_size, input_dim, init, act), m_last_input(nullptr)
+    : Layer(layer_size, input_dim, init, act)
 {
   m_name = "Dense";
   m_weights = Eigen::MatrixXd(m_layer_size, m_input_dim);
@@ -23,12 +23,15 @@ Dense::Dense(uint layer_size, uint input_dim, Initializer * init, Activation * a
   m_hidden_state = Eigen::VectorXd(m_layer_size, 1);
 }
 
-bool Dense::feed(std::shared_ptr<Eigen::VectorXd> indat) {
-    return true;
+std::shared_ptr<Eigen::VectorXd> Dense::feed(std::shared_ptr<Eigen::VectorXd> indat) {
+    m_last_input = *indat;
+    m_hidden_state = *indat; // self.weights `dot` indat + m_bias;
+    m_activation->activate(std::make_shared<Eigen::VectorXd>(m_hidden_state));
+    return std::make_shared<Eigen::VectorXd>(m_hidden_state);
 }
 
-bool Dense::bprop(std::shared_ptr<Eigen::MatrixXd> error, bool verbose) {
-    return true;
+std::shared_ptr<Eigen::MatrixXd> Dense::bprop(std::shared_ptr<Eigen::MatrixXd> error, bool verbose) {
+  return error;
 }
 
 bool Dense::update() {

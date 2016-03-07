@@ -48,7 +48,7 @@ public :
     * @ret  : Eigen::VectorXd, the output of this layer's transformation
     * @desc : feeds a vector of data through this layer and returns the output of the transformation
     */
-    virtual bool feed(std::shared_ptr<Eigen::VectorXd> data) = 0;
+    virtual std::shared_ptr<Eigen::VectorXd> feed(std::shared_ptr<Eigen::VectorXd> data) = 0;
 
     /*
     * @fn   : bprop
@@ -57,7 +57,7 @@ public :
     * @desc : Takes an error from the next layer and computes it's gradient, then returns it's delta for the
     *         previous layer to make use of 
     */
-    virtual bool bprop(std::shared_ptr<Eigen::MatrixXd> error, bool verbose=false) = 0;
+    virtual std::shared_ptr<Eigen::MatrixXd> bprop(std::shared_ptr<Eigen::MatrixXd> error, bool verbose=false) = 0;
     
     /*
     * @fn   : update

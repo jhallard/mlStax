@@ -14,6 +14,7 @@
 #include <map>
 #include <iostream>
 #include <random>
+#include <memory>
 
 #include <Eigen/Dense>
 
@@ -23,18 +24,18 @@ class Activation {
 public:
 	void set_name(std::string name);
 	std::string get_name() const;
-    virtual void activate(Eigen::MatrixXd *) = 0;
+    virtual void activate(std::shared_ptr<Eigen::VectorXd> inmar) = 0;
 private:
 	std::string m_name;
 };
 
 // @class : Sigmoid
 // @info  : Performs the logistic sigmoid function elementwise over a given
-// Eigen MatrixXd. 
+// Eigen VectorXd. 
 class Sigmoid : public Activation {
 public:
     Sigmoid() { set_name("Sigmoid"); }
-    virtual void activate(Eigen::MatrixXd * inmat);
+    virtual void activate(std::shared_ptr<Eigen::VectorXd> inmat);
 };
 
 // @class :relu 
@@ -43,7 +44,7 @@ public:
 class ReLU : public Activation {
 public:
     ReLU() { set_name("ReLU"); }
-    virtual void activate(Eigen::MatrixXd * inmat);
+    virtual void activate(std::shared_ptr<Eigen::VectorXd> inmat);
 };
 
 // @class : Tanh
@@ -52,7 +53,7 @@ public:
 class Tanh : public Activation {
 public:
     Tanh() { set_name("Tanh"); }
-    virtual void activate(Eigen::MatrixXd * inmat);
+    virtual void activate(std::shared_ptr<Eigen::VectorXd> inmat);
 };
 
 // @class : Nothing 
@@ -60,7 +61,7 @@ public:
 class Nothing : public Activation {
 public:
     Nothing() { set_name("Nothing"); }
-    virtual void activate(Eigen::MatrixXd * inmat);
+    virtual void activate(std::shared_ptr<Eigen::VectorXd> inmat);
 };
 
 } // endnamespace
