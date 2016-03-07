@@ -15,6 +15,7 @@
 #include <vector>
 #include <map>
 #include <iostream>
+#include <sstream>
 
 #include <Eigen/Dense>
 
@@ -23,10 +24,9 @@
 #include "activations.h"
 
 namespace mlstax {
-using namespace mlstax;
 
 // base class for the Layer hierarchy
-class Dense : public mlstax::Layer {
+class Dense : public Layer {
 
 public :
 
@@ -36,7 +36,7 @@ public :
               init - instance of the Initializer hierarchy, used to initialize the weights for this layer
               act  - Activation function to be applied to the output of this layer.
     */
-    Dense(uint layer_size, uint input_dim, Initializer * init = nullptr, Activation * act = nullptr);
+    Dense(uint layer_size, uint input_dim, Initializer * init, Activation * act);
 
     /*
     * @fn   : feed
@@ -44,7 +44,7 @@ public :
     * @ret  : Eigen::Vector2d, the output of this layer's transformation
     * @desc : feeds a vector of data through this layer and returns the output of the transformation
     */
-    virtual bool feed(Eigen::Vector2d * data);
+    virtual bool feed(std::shared_ptr<Eigen::Vector2d> data);
 
     /*
     * @fn   : bprop
@@ -53,7 +53,7 @@ public :
     * @desc : Takes an error from the next layer and computes it's gradient, then returns it's delta for the
     *         previous layer to make use of 
     */
-    virtual bool bprop(Eigen::MatrixXd * error, bool verbose=false);
+    virtual bool bprop(std::shared_ptr<Eigen::MatrixXd> error, bool verbose=false);
     
     /*
     * @fn   : update

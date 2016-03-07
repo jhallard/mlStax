@@ -19,14 +19,17 @@
 #include <Eigen/Dense>
 
 namespace mlstax {
-using namespace mlstax;
 
 // @class : Initializer
 // @description : Abstract base class, all instances of this hierarchy can be used to
 // initialize a given Eigen matrix to certiain values.
 class Initializer {
 public :
+	void set_name(std::string name);
+	std::string get_name() const;
     virtual void init_weights(Eigen::MatrixXd * inmat) = 0;
+private :
+	std::string m_name;
 };
 
 
@@ -35,8 +38,9 @@ public :
 //   normal distribution with the given mean and standard deviation.
 class Normal : public Initializer {
 private :
-    std::random_device rd;
-    std::mt19937 eng;
+    std::random_device m_rd;
+    std::mt19937 m_eng;
+    double m_mean, m_stddev;
 public :
     Normal(double mean = 0, double stddev = 1.0);
     virtual void init_weights(Eigen::MatrixXd * inmat);
@@ -47,10 +51,11 @@ public :
 //   distribution. Distribution is given max and min values.
 class Uniform : public Initializer {
 private :
-    std::random_device rd;
-    std::mt19937 eng;
+    std::random_device m_rd;
+    std::mt19937 m_eng;
+    double m_min, m_max;
 public :
-    Uniform(double max = -1.0, double min = 1.0);
+    Uniform(double min= -1.0, double max = 1.0);
     virtual void init_weights(Eigen::MatrixXd * inmat);
 };
 
@@ -58,9 +63,9 @@ public :
 // @description : Initialize a Eigen matrix with constant values
 class Constant : public Initializer {
 private:
-    float const_val;
+    double m_const_val;
 public :
-    Constant(float const_val);
+    Constant(double const_val);
     virtual void init_weights(Eigen::MatrixXd * inmat);
 };
 

@@ -12,13 +12,15 @@ using namespace mlstax;
 
 Dense::Dense(uint layer_size, uint input_dim, Initializer * init, Activation * act) 
     : Layer(layer_size, input_dim, init, act)
-{}
+{
+  m_name = "Dense";
+}
 
-bool Dense::feed(Eigen::Vector2d * indat) {
+bool Dense::feed(std::shared_ptr<Eigen::Vector2d> indat) {
     return true;
 }
 
-bool Dense::bprop(Eigen::MatrixXd * error, bool verbose) {
+bool Dense::bprop(std::shared_ptr<Eigen::MatrixXd> error, bool verbose) {
     return true;
 }
 

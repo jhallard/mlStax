@@ -10,20 +10,26 @@
 #include <vector>
 #include <Eigen/Dense>
 
-#include "model.h"
-#include "dense.h"
-#include "initializers.h"
-#include "activations.h"
+#include "../src/model.h"
+#include "../src/dense.h"
+#include "../src/initializers.h"
+#include "../src/activations.h"
 
 using namespace mlstax;
 using namespace std;
+
+#define STR_DIV cout << "_________________________________________________" << endl;
 
 // @test : model_construct
 // @info : simply construct a model with no layers and return true if nothing breaks
 bool model_construct() {
     try {
         Model mm = Model(12);
-        cout << "Model Created." << endl;
+        cout << "Model Created. Architecture Below" << endl;
+        STR_DIV
+        cout << mm;
+        STR_DIV
+        STR_DIV
     } catch(...) {
         cerr << "Model Construction Failed (model_construct)" << endl;
         return false;
@@ -36,9 +42,15 @@ bool model_construct() {
 bool add_layers() {
     try {
         Model mm = Model(12);
-        Dense * layer = new Dense(20, 12); // use default inti and activations
+        Initializer * init = new Normal(0, 2.0);
+        Activation * act = new Sigmoid();
+        Dense * layer = new Dense(20, 12, init, act); // use default inti and activations
         mm.push_layer(layer);
         cout << "Model Created and Layer Added" << endl;
+        STR_DIV
+        cout << mm;
+        STR_DIV
+        STR_DIV
         return true;
     } catch(...) {
         cerr << "Adding Dense Layer to Model Failed (add_layers)" << endl;

@@ -11,9 +11,9 @@ IF( NOT EIGEN3_INCLUDE_DIR )
     SET( EIGEN3_INCLUDE_DIR "/usr/include/eigen3/" )
 ENDIF()
 INCLUDE_DIRECTORIES ( "${EIGEN3_INCLUDE_DIR}" )
-include_directories(include)
+include_directories( ${MY_SOURCE_DIR}/src )
 
-file(GLOB SOURCES "src/*.cpp" "src/*.h")
+file(GLOB SOURCES "src/*.cpp" "src/*.h" )
 
 #Generate the shared library from the sources
 add_library(mlstax SHARED ${SOURCES})

@@ -13,6 +13,7 @@
 #include <vector>
 #include <map>
 #include <iostream>
+#include <sstream>
 
 #include <Eigen/Dense>
 
@@ -20,27 +21,32 @@
 
 namespace mlstax {
 
+struct EpochResult {
+    double loss;
+    double accuracy;
+};
+
 class Model {
 
 public :
+    friend std::ostream& operator<<(std::ostream& os, const Model& model);
+
     Model(uint input_dim, std::vector<Layer*> layers = {});
 
     bool push_layer(Layer * layer);
-    std::vector<Layer> get_layers() const;
+    std::vector<Layer*> get_layers() const;
 
-    std::vector<std::string> train(std::vector<Eigen::Vector2d> & indat, 
-           std::vector<Eigen::Vector2d> * targets,
+    std::vector<EpochResult> train(std::vector<Eigen::Vector2d> & indat, 
+           std::vector<Eigen::Vector2d> & targets,
            uint batchsize = 10, uint nepochs = 10, bool verbose=false
     ); 
 
-    std::vector<std::string> evaluate(std::vector<Eigen::Vector2d> & indat, 
-           std::vector<Eigen::Vector2d> * targets,
+    std::vector<EpochResult> evaluate(std::vector<Eigen::Vector2d> & indat, 
+           std::vector<Eigen::Vector2d> & targets,
            bool verbose=false
     ); 
 
-    std::vector<Eigen::Vector2d> predict(std::vector<Eigen::Vector2d> * indat);
-
-    std::string tostr() const; // maybe I should just override cout operator?
+    std::vector<Eigen::Vector2d> predict(std::vector<Eigen::Vector2d> & indat);
 
     bool save_weights(const std::string fn) const;
     bool load_weights(const std::string fn);
@@ -49,10 +55,11 @@ public :
     bool load_model(const std::string fn);
 
 private :
-
     uint m_input_dim;
     std::vector<Layer*> m_layers;
+
 };
+
 
 }
 

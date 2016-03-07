@@ -18,11 +18,14 @@
 #include <Eigen/Dense>
 
 namespace mlstax {
-using namespace mlstax;
 
 class Activation {
 public:
+	void set_name(std::string name);
+	std::string get_name() const;
     virtual void activate(Eigen::MatrixXd *) = 0;
+private:
+	std::string m_name;
 };
 
 // @class : Sigmoid
@@ -30,7 +33,7 @@ public:
 // Eigen MatrixXd. 
 class Sigmoid : public Activation {
 public:
-    Sigmoid();
+    Sigmoid() { set_name("Sigmoid"); }
     virtual void activate(Eigen::MatrixXd * inmat);
 };
 
@@ -39,7 +42,7 @@ public:
 // a given eigen matrixxd. 
 class ReLU : public Activation {
 public:
-    ReLU();
+    ReLU() { set_name("ReLU"); }
     virtual void activate(Eigen::MatrixXd * inmat);
 };
 
@@ -48,7 +51,15 @@ public:
 // a given eigen matrixxd. 
 class Tanh : public Activation {
 public:
-    Tanh();
+    Tanh() { set_name("Tanh"); }
+    virtual void activate(Eigen::MatrixXd * inmat);
+};
+
+// @class : Nothing 
+// @info  : Performs no transformation on the data, can sometimes be convenient
+class Nothing : public Activation {
+public:
+    Nothing() { set_name("Nothing"); }
     virtual void activate(Eigen::MatrixXd * inmat);
 };
 

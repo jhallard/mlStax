@@ -8,12 +8,15 @@
 
 #include "layer.h"
 
-using namespace mlstax;
+
+namespace mlstax {
 
 Layer::Layer(uint layer_size, uint input_dim, Initializer * init, Activation * act) 
     : m_layer_size(layer_size), m_input_dim(input_dim),
       m_initializer(init),
-      m_activation(act) 
+      m_activation(act),
+      m_last_input(nullptr),
+      m_name("")
 {} 
 
 uint Layer::get_input_dim() const {
@@ -30,4 +33,14 @@ bool Layer::set_input_dim(uint indim) {
 
 bool Layer::set_layer_size(uint lsize) {
     m_layer_size = lsize;
+}
+
+std::ostream& operator<<(std::ostream& os, const Layer& layer) {
+    std::stringstream ss;
+    ss << "Type : " << layer.m_name << ", Size : " << layer.m_layer_size << ", Input Dim : " << layer.m_input_dim << std::endl;
+    ss << "Activation : " << layer.m_activation->get_name() << ", Initializer : " << layer.m_initializer->get_name();
+    os << ss.str();
+    return os;
+}
+
 }
