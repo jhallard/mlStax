@@ -8,8 +8,8 @@
  * and the output of the nodes at the previous layer. It represent the 'standard'
  * layer in a feed-forward neural network.
  * */
-#ifndef MLSTAX_LAYER_H
-#define MLSTAX_LAYER_H
+#ifndef MLSTAX_DENSE_H
+#define MLSTAX_DENSE_H
 
 
 #include <vector>
@@ -23,9 +23,10 @@
 #include "activations.h"
 
 namespace mlstax {
+using namespace mlstax;
 
 // base class for the Layer hierarchy
-class Dense : public Layer {
+class Dense : public mlstax::Layer {
 
 public :
 
@@ -35,7 +36,7 @@ public :
               init - instance of the Initializer hierarchy, used to initialize the weights for this layer
               act  - Activation function to be applied to the output of this layer.
     */
-    virtual Dense(int layer_size, int input_dim, Initializer init = Normal(), Activation act = Sigmoid());
+    Dense(uint layer_size, uint input_dim, Initializer * init = nullptr, Activation * act = nullptr);
 
     /*
     * @fn   : feed
@@ -43,7 +44,7 @@ public :
     * @ret  : Eigen::Vector2d, the output of this layer's transformation
     * @desc : feeds a vector of data through this layer and returns the output of the transformation
     */
-    virtual bool feed(Eigen::Vector2d data);
+    virtual bool feed(Eigen::Vector2d * data);
 
     /*
     * @fn   : bprop
@@ -52,7 +53,7 @@ public :
     * @desc : Takes an error from the next layer and computes it's gradient, then returns it's delta for the
     *         previous layer to make use of 
     */
-    virtual bool bprop(Eigen::MatrixXd error, bool verbose=false);
+    virtual bool bprop(Eigen::MatrixXd * error, bool verbose=false);
     
     /*
     * @fn   : update
@@ -63,7 +64,8 @@ public :
     virtual bool update();
 
 private :
-
 };
+
+} // end namespace mlstax
 
 #endif

@@ -19,6 +19,7 @@
 #include <Eigen/Dense>
 
 namespace mlstax {
+using namespace mlstax;
 
 // @class : Initializer
 // @description : Abstract base class, all instances of this hierarchy can be used to
@@ -38,7 +39,7 @@ private :
     std::mt19937 eng;
 public :
     Normal(double mean = 0, double stddev = 1.0);
-    virtual void init_weights(Eigen::MatrixXd * inmat) = 0;
+    virtual void init_weights(Eigen::MatrixXd * inmat);
 };
 
 // @class : Uniform

@@ -8,7 +8,7 @@
  * exploitation of polymorphism.
  * */
 #ifndef MLSTAX_ACTIVATION_H
-#define MLSTAX_ACTIVTION_H
+#define MLSTAX_ACTIVATION_H
 
 #include <vector>
 #include <map>
@@ -18,6 +18,7 @@
 #include <Eigen/Dense>
 
 namespace mlstax {
+using namespace mlstax;
 
 class Activation {
 public:

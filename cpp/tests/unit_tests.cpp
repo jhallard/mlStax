@@ -11,7 +11,12 @@
 #include <Eigen/Dense>
 
 #include "model.h"
+#include "dense.h"
+#include "initializers.h"
+#include "activations.h"
 
+using namespace mlstax;
+using namespace std;
 // @test : model_construct
 // @info : simply construct a model with no layers and return true if nothing breaks
 bool model_construct() {
@@ -29,7 +34,7 @@ bool model_construct() {
 bool add_layers() {
     try {
         Model mm = Model(12);
-        Dense * layer = new Layer(20, 12); // use default inti and activations
+        Dense * layer = new Dense(20, 12); // use default inti and activations
         mm.push_layer(layer);
         return true;
     } catch(...) {
