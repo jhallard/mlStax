@@ -46,7 +46,7 @@ class Normal : public Initializer {
 private :
     std::random_device m_rd;
     std::mt19937 m_eng;
-    std::normal_distribution<> m_dist;
+    std::normal_distribution<double> m_dist;
     double m_mean, m_stddev;
 public :
     Normal(double mean = 0, double stddev = 1.0);

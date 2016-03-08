@@ -58,7 +58,57 @@ bool add_layers() {
     }
 }
 
+
+// @test : test_initializers
+// @info : mostly for visual confirmation that stuff is being randomized, we aren't doing
+// any statistical checks on the randomness.
+bool test_initializers() {
+    Initializer * init = new Uniform(-1, 1);
+    Eigen::MatrixXd inmat = Eigen::MatrixXd::Zero(2, 2);
+    init->init_weights(inmat);
+    delete(init);
+    cout << inmat << endl;
+
+    init = new Normal(50, 20);
+    inmat = Eigen::MatrixXd::Zero(2, 2);
+    init->init_weights(inmat);
+    delete(init);
+    cout << inmat << endl;
+
+    init = new Constant(44.0);
+    inmat = Eigen::MatrixXd::Zero(2, 2);
+    init->init_weights(inmat);
+    delete(init);
+    cout << inmat << endl;
+    
+    return true;
+}
+
+bool test_activations() {
+    // confirmed as working
+    Activation * act = new Sigmoid();
+    Eigen::VectorXd indat = Eigen::VectorXd::Random(10);
+    act->activate(indat);
+    delete(act);
+
+    // confirmed as working
+    act = new ReLU();
+    indat = Eigen::VectorXd::Random(10);
+    act->activate(indat);
+    delete(act);
+
+    act = new Tanh();
+    indat = Eigen::VectorXd::Random(10);
+    cout << indat << endl << endl;
+    act->activate(indat);
+    delete(act);
+    cout << indat << endl;
+
+    return true;
+}
+
 int main(int argc, char **argv) {
     cout << "Starting Unit Tests :" << endl;
+    test_initializers() && test_activations();
     return model_construct() && add_layers();
 }

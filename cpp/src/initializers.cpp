@@ -20,8 +20,8 @@ std::string Initializer::get_name() const {
 }
 
 // Normal distribution function defintions
-Normal::Normal(double mean, double stddev) : m_mean(mean), m_stddev(stddev),
-   m_eng(m_rd()), m_dist(m_mean, m_stddev) {
+Normal::Normal(double mean, double stddev) : m_mean(mean), m_stddev(stddev), m_rd(),
+   m_eng(m_rd()), m_dist(mean, stddev) {
     set_name("Normal");
 }
 

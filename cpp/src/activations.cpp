@@ -17,7 +17,7 @@ double sigmoid(double x) {
     return 1.0 / (1 + exp(x));
 }
 
-double tanh(double x) {
+double my_tanh(double x) {
     return tanh(x);
 }
 
@@ -43,7 +43,7 @@ void ReLU::activate(Eigen::VectorXd & inmat) {
 }
 
 void Tanh::activate(Eigen::VectorXd & inmat) {
-    inmat = inmat.unaryExpr(&tanh);
+    inmat = inmat.unaryExpr(&my_tanh);
 }
 
 void Nothing::activate(Eigen::VectorXd & inmat) {

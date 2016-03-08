@@ -37,8 +37,8 @@ public :
     /*
     * @fn   : constructor
     * @args : layer_size - number of nodes in this layer, input_dim - output size of the last layer.
-              init - instance of the Initializer hierarchy, used to initialize the weights for this layer
-              act  - Activation function to be applied to the output of this layer.
+    *         init - instance of the Initializer hierarchy, used to initialize the weights for this layer
+    *         act  - Activation function to be applied to the output of this layer.
     */
     Layer(uint layer_size, uint input_dim, Initializer * init, Activation * act);
 
