@@ -27,7 +27,13 @@ class Initializer {
 public :
 	void set_name(std::string name);
 	std::string get_name() const;
-    virtual void init_weights(Eigen::MatrixXd * inmat) = 0;
+    
+    // @func : init_weights
+    // @args : weight matrix to be initialized
+    // @ret  : none, argument is in/out param
+    // @info : this function initializes the given input matrix according to the
+    // specific initializer that is implementing this function.
+    virtual void init_weights(Eigen::MatrixXd & inmat) = 0;
 private :
 	std::string m_name;
 };
@@ -35,28 +41,30 @@ private :
 
 // @class : Normal
 // @description : Initialize an Eigen matrix with random values chosen from a
-//   normal distribution with the given mean and standard deviation.
+// normal distribution with the given mean and standard deviation.
 class Normal : public Initializer {
 private :
     std::random_device m_rd;
     std::mt19937 m_eng;
+    std::normal_distribution<> m_dist;
     double m_mean, m_stddev;
 public :
     Normal(double mean = 0, double stddev = 1.0);
-    virtual void init_weights(Eigen::MatrixXd * inmat);
+    virtual void init_weights(Eigen::MatrixXd & inmat);
 };
 
 // @class : Uniform
 // @description : Initialize a Eigen matrix with random values chosen from a uniform 
-//   distribution. Distribution is given max and min values.
+// distribution. Distribution is given max and min values.
 class Uniform : public Initializer {
 private :
     std::random_device m_rd;
     std::mt19937 m_eng;
+    std::uniform_real_distribution<> m_dist;
     double m_min, m_max;
 public :
     Uniform(double min= -1.0, double max = 1.0);
-    virtual void init_weights(Eigen::MatrixXd * inmat);
+    virtual void init_weights(Eigen::MatrixXd & inmat);
 };
 
 // @class : Constant 
@@ -66,7 +74,7 @@ private:
     double m_const_val;
 public :
     Constant(double const_val);
-    virtual void init_weights(Eigen::MatrixXd * inmat);
+    virtual void init_weights(Eigen::MatrixXd & inmat);
 };
 
 } // end namespace mlstax

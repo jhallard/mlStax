@@ -24,7 +24,7 @@ class Activation {
 public:
 	void set_name(std::string name);
 	std::string get_name() const;
-    virtual void activate(std::shared_ptr<Eigen::VectorXd> inmar) = 0;
+    virtual void activate(Eigen::VectorXd & inmat) = 0;
 private:
 	std::string m_name;
 };
@@ -35,7 +35,7 @@ private:
 class Sigmoid : public Activation {
 public:
     Sigmoid() { set_name("Sigmoid"); }
-    virtual void activate(std::shared_ptr<Eigen::VectorXd> inmat);
+    virtual void activate(Eigen::VectorXd & inmat);
 };
 
 // @class :relu 
@@ -44,7 +44,7 @@ public:
 class ReLU : public Activation {
 public:
     ReLU() { set_name("ReLU"); }
-    virtual void activate(std::shared_ptr<Eigen::VectorXd> inmat);
+    virtual void activate(Eigen::VectorXd & inmat);
 };
 
 // @class : Tanh
@@ -53,7 +53,7 @@ public:
 class Tanh : public Activation {
 public:
     Tanh() { set_name("Tanh"); }
-    virtual void activate(std::shared_ptr<Eigen::VectorXd> inmat);
+    virtual void activate(Eigen::VectorXd & inmat);
 };
 
 // @class : Nothing 
@@ -61,7 +61,7 @@ public:
 class Nothing : public Activation {
 public:
     Nothing() { set_name("Nothing"); }
-    virtual void activate(std::shared_ptr<Eigen::VectorXd> inmat);
+    virtual void activate(Eigen::VectorXd & inmat);
 };
 
 } // endnamespace

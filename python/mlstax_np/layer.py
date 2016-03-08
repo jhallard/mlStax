@@ -68,7 +68,7 @@ class Layer(object) :
         pass
 
     def __str__(self) :
-        return """Layer #%s, type : %s\n indim : %s, size : %s\n init : %s, activation : %s""" % \
+        return """Layer #%s\n type : %s, indim : %s, size : %s\n init : %s, activation : %s""" % \
               (self.lnum, self.lname, self.input_dim, self.size, self.init, self.actstr)
 
 
