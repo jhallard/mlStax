@@ -42,10 +42,13 @@ bool model_construct() {
 bool add_layers() {
     try {
         Model mm = Model(12);
-        Initializer * init = new Normal(0, 2.0);
-        Activation * act = new Sigmoid();
-        Dense * layer = new Dense(20, 12, init, act); // use default inti and activations
+        auto init = std::make_shared<Normal>(0, 2.0);
+        auto act = std::make_shared<Sigmoid>();
+        auto layer = std::make_shared<Dense>(20, 12, init, act); // use default inti and activations
         mm.push_layer(layer);
+        auto init2 = std::make_shared<Uniform>(-2.0, 2.0);
+        auto layer2 = std::make_shared<Dense>(24, 20, init2, act); // use default inti and activations
+        mm.push_layer(layer2);
         cout << "Model Created and Layer Added" << endl;
         STR_DIV
         cout << mm;
@@ -67,19 +70,16 @@ bool test_initializers() {
     Eigen::MatrixXd inmat = Eigen::MatrixXd::Zero(2, 2);
     init->init_weights(inmat);
     delete(init);
-    cout << inmat << endl;
 
     init = new Normal(50, 20);
     inmat = Eigen::MatrixXd::Zero(2, 2);
     init->init_weights(inmat);
     delete(init);
-    cout << inmat << endl;
 
     init = new Constant(44.0);
     inmat = Eigen::MatrixXd::Zero(2, 2);
     init->init_weights(inmat);
     delete(init);
-    cout << inmat << endl;
     
     return true;
 }
@@ -97,18 +97,27 @@ bool test_activations() {
     act->activate(indat);
     delete(act);
 
+    //confirmed as working
     act = new Tanh();
     indat = Eigen::VectorXd::Random(10);
-    cout << indat << endl << endl;
     act->activate(indat);
     delete(act);
-    cout << indat << endl;
 
     return true;
 }
 
 int main(int argc, char **argv) {
     cout << "Starting Unit Tests :" << endl;
-    test_initializers() && test_activations();
-    return model_construct() && add_layers();
+    cout << "Testing Initializers ... ";
+    if(test_initializers()) cout << "Success" << endl;
+    else cout << "Failed" << endl; 
+    cout << "Testing Activations... ";
+    if(test_activations()) cout << "Success" << endl;
+    else cout << "Failed" << endl; 
+
+    cout << "Testing Model Construction...";
+    if( model_construct() && add_layers() )
+        cout << "Success.\n";
+    else 
+        cout << "Failed\n";
 }

@@ -36,7 +36,7 @@ public :
               init - instance of the Initializer hierarchy, used to initialize the weights for this layer
               act  - Activation function to be applied to the output of this layer.
     */
-    Dense(uint layer_size, uint input_dim, Initializer * init, Activation * act);
+    Dense(uint layer_size, uint input_dim, std::shared_ptr<Initializer> init, std::shared_ptr<Activation> act);
 
     /*
     * @fn   : feed
@@ -79,6 +79,7 @@ private :
 
     Eigen::VectorXd m_last_input; 
 	Eigen::VectorXd m_hidden_state;
+	Eigen::VectorXd m_dhidden_state;
 	
 };
 

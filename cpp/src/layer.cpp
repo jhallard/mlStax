@@ -11,7 +11,7 @@
 
 namespace mlstax {
 
-Layer::Layer(uint layer_size, uint input_dim, Initializer * init, Activation * act) 
+Layer::Layer(uint layer_size, uint input_dim, std::shared_ptr<Initializer> init, std::shared_ptr<Activation> act)
     : m_layer_size(layer_size), m_input_dim(input_dim),
       m_initializer(init),
       m_activation(act),

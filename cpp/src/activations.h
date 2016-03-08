@@ -22,11 +22,19 @@ namespace mlstax {
 
 class Activation {
 public:
+    // @func : activate
+    // @args : a vector of doubles that you execute an element-wise transform over
+    virtual void activate(Eigen::VectorXd & inmat) = 0;
+
+    // @func : deactivate
+    // @args : the output of the activate function that you want the derivative w/ 
+    // respect to.
+    virtual void dactivate(Eigen::VectorXd & activation) = 0;
+
 	void set_name(std::string name);
 	std::string get_name() const;
-    virtual void activate(Eigen::VectorXd & inmat) = 0;
 private:
-	std::string m_name;
+	std::string m_name; // simply name the activation, like "Sigmoid" or w/e. Helps with debugging.
 };
 
 // @class : Sigmoid
@@ -36,6 +44,7 @@ class Sigmoid : public Activation {
 public:
     Sigmoid() { set_name("Sigmoid"); }
     virtual void activate(Eigen::VectorXd & inmat);
+    virtual void dactivate(Eigen::VectorXd & inmat);
 };
 
 // @class :relu 
@@ -45,6 +54,7 @@ class ReLU : public Activation {
 public:
     ReLU() { set_name("ReLU"); }
     virtual void activate(Eigen::VectorXd & inmat);
+    virtual void dactivate(Eigen::VectorXd & inmat);
 };
 
 // @class : Tanh
@@ -54,6 +64,7 @@ class Tanh : public Activation {
 public:
     Tanh() { set_name("Tanh"); }
     virtual void activate(Eigen::VectorXd & inmat);
+    virtual void dactivate(Eigen::VectorXd & inmat);
 };
 
 // @class : Nothing 
@@ -62,6 +73,7 @@ class Nothing : public Activation {
 public:
     Nothing() { set_name("Nothing"); }
     virtual void activate(Eigen::VectorXd & inmat);
+    virtual void dactivate(Eigen::VectorXd & inmat);
 };
 
 } // endnamespace

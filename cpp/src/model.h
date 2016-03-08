@@ -31,10 +31,10 @@ class Model {
 public :
     friend std::ostream& operator<<(std::ostream& os, const Model& model);
 
-    Model(uint input_dim, std::vector<Layer*> layers = {});
+    Model(uint input_dim, std::vector<std::shared_ptr<Layer>> layers = {});
 
-    bool push_layer(Layer * layer);
-    std::vector<Layer*> get_layers() const;
+    bool push_layer(std::shared_ptr<Layer> layer);
+    std::vector<std::shared_ptr<Layer>> get_layers() const;
 
     std::vector<EpochResult> train(std::vector<Eigen::VectorXd> & indat, 
            std::vector<Eigen::VectorXd> & targets,
@@ -56,7 +56,7 @@ public :
 
 private :
     uint m_input_dim;
-    std::vector<Layer*> m_layers;
+    std::vector<std::shared_ptr<Layer>> m_layers;
 
 };
 

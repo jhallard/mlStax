@@ -40,7 +40,7 @@ public :
     *         init - instance of the Initializer hierarchy, used to initialize the weights for this layer
     *         act  - Activation function to be applied to the output of this layer.
     */
-    Layer(uint layer_size, uint input_dim, Initializer * init, Activation * act);
+    Layer(uint layer_size, uint input_dim, std::shared_ptr<Initializer> init, std::shared_ptr<Activation> act);
 
     /*
     * @fn   : feed
@@ -82,8 +82,8 @@ public :
 protected :
 
     // Initializer and Activation function-objects for this specific layer
-    std::unique_ptr<Initializer> m_initializer;
-    std::unique_ptr<Activation> m_activation;
+    std::shared_ptr<Initializer> m_initializer;
+    std::shared_ptr<Activation> m_activation;
 
     uint m_input_dim, m_layer_size; 
     std::string m_name;

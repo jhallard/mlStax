@@ -11,12 +11,12 @@
 
 namespace mlstax {
 
-Model::Model(uint input_dim, std::vector<Layer*> layers) :
+Model::Model(uint input_dim, std::vector<std::shared_ptr<Layer>> layers) :
     m_input_dim(input_dim),
     m_layers(layers) 
 {}
 
-bool Model::push_layer(Layer * layer) {
+bool Model::push_layer(std::shared_ptr<Layer> layer) {
 
     if(!m_layers.size()) {
         if(layer->get_input_dim() != this->m_input_dim) {
@@ -34,7 +34,7 @@ bool Model::push_layer(Layer * layer) {
         return true;
 }
 
-std::vector<Layer*> Model::get_layers() const {
+std::vector<std::shared_ptr<Layer>> Model::get_layers() const {
     return this->m_layers;
 }
 

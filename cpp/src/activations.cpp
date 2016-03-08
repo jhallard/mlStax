@@ -38,15 +38,40 @@ void Sigmoid::activate(Eigen::VectorXd & inmat) {
     inmat = inmat.unaryExpr(&sigmoid);
 }
 
+void Sigmoid::dactivate(Eigen::VectorXd & inmat) {
+    inmat = inmat.unaryExpr(
+            std::function<double(double)>([this](double sig) -> double { return sig*(1-sig); })
+    );
+}
+
 void ReLU::activate(Eigen::VectorXd & inmat) {
     inmat = inmat.unaryExpr(&relu);
+}
+
+void ReLU::dactivate(Eigen::VectorXd & inmat) {
+    inmat = inmat.unaryExpr(
+            std::function<double(double)>([this](double sig) -> double { if(sig > 0) return sig; else return 0; })
+    );
 }
 
 void Tanh::activate(Eigen::VectorXd & inmat) {
     inmat = inmat.unaryExpr(&my_tanh);
 }
 
-void Nothing::activate(Eigen::VectorXd & inmat) {
-    //literally do nothing
-
+void Tanh::dactivate(Eigen::VectorXd & inmat) {
+    inmat = inmat.unaryExpr(
+            std::function<double(double)>([this](double sig) -> double { return 1.0 - tan(sig)*tan(sig); })
+    );
 }
+
+void Nothing::activate(Eigen::VectorXd & inmat) {
+    //literally do nothing, leave inmat alone.
+}
+
+void Nothing::dactivate(Eigen::VectorXd & inmat) {
+    // f(x) = x, f'(x) = 1
+    inmat = inmat.unaryExpr(
+            std::function<double(double)>([this](double sig) -> double { return 1.0; })
+    );
+}
+

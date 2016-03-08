@@ -10,17 +10,19 @@
 
 namespace mlstax {
 
-Dense::Dense(uint layer_size, uint input_dim, Initializer * init, Activation * act) 
+Dense::Dense(uint layer_size, uint input_dim, std::shared_ptr<Initializer> init, std::shared_ptr<Activation> act)
     : Layer(layer_size, input_dim, init, act)
 {
   m_name = "Dense";
   m_weights = Eigen::MatrixXd(m_layer_size, m_input_dim);
+  m_initializer->init_weights(m_weights);
   m_dweights = Eigen::MatrixXd(m_layer_size, m_input_dim);
-  m_bias = Eigen::VectorXd(m_layer_size, 1);
-  m_dbias = Eigen::VectorXd(m_layer_size, 1);
+  m_bias = Eigen::VectorXd::Zero(m_layer_size, 1);
+  m_dbias = Eigen::VectorXd::Zero(m_layer_size, 1);
 
   m_last_input = Eigen::VectorXd(m_layer_size, 1);
-  m_hidden_state = Eigen::VectorXd(m_layer_size, 1);
+  m_hidden_state = Eigen::VectorXd::Zero(m_layer_size, 1);
+  m_dhidden_state = Eigen::VectorXd::Zero(m_layer_size, 1);
 }
 
 std::shared_ptr<Eigen::VectorXd> Dense::feed(std::shared_ptr<Eigen::VectorXd> indat) {
@@ -31,7 +33,13 @@ std::shared_ptr<Eigen::VectorXd> Dense::feed(std::shared_ptr<Eigen::VectorXd> in
 }
 
 std::shared_ptr<Eigen::MatrixXd> Dense::bprop(std::shared_ptr<Eigen::MatrixXd> error, bool verbose) {
-  return error;
+    m_dhidden_state = m_hidden_state;
+    m_activation->dactivate(m_dhidden_state);
+    auto newdelta = error->cwiseProduct(m_dhidden_state);
+    auto newerror = m_weights.transpose()*newdelta;
+    m_dweights += newdelta*m_last_input.transpose();
+    m_dbias += newdelta;
+    return std::make_shared<Eigen::MatrixXd>(newerror);
 }
 
 bool Dense::update() {
