@@ -25,11 +25,6 @@ using namespace std;
 bool model_construct() {
     try {
         Model mm = Model(12);
-        cout << "Model Created. Architecture Below" << endl;
-        STR_DIV
-        cout << mm;
-        STR_DIV
-        STR_DIV
     } catch(...) {
         cerr << "Model Construction Failed (model_construct)" << endl;
         return false;
@@ -49,17 +44,79 @@ bool add_layers() {
         auto init2 = std::make_shared<Uniform>(-2.0, 2.0);
         auto layer2 = std::make_shared<Dense>(24, 20, init2, act); // use default inti and activations
         mm.push_layer(layer2);
-        cout << "Model Created and Layer Added" << endl;
-        STR_DIV
-        cout << mm;
-        STR_DIV
-        STR_DIV
         return true;
     } catch(...) {
         cerr << "Adding Dense Layer to Model Failed (add_layers)" << endl;
         return false;
     }
 }
+
+
+bool simple_xor_test() {
+    try {
+        Model mm = Model(2);
+        auto init = std::make_shared<Normal>(0, 0.2);
+        auto act = std::make_shared<ReLU>();
+        auto layer = std::make_shared<Dense>(5, 2, init, act); // use default inti and activations
+        mm.push_layer(layer);
+        auto init2 = std::make_shared<Uniform>(-0.2, 0.2);
+        auto act2 = std::make_shared<ReLU>();
+        auto layer2 = std::make_shared<Dense>(1, 5, init2, act2); // use default inti and activations
+        mm.push_layer(layer2);
+        STR_DIV
+        cout << mm << std::endl;
+        STR_DIV
+        STR_DIV
+        vector<Eigen::VectorXd> indata; 
+        Eigen::VectorXd temp(2);
+        temp << 0, 0;
+        indata.push_back(temp);
+        temp = (Eigen::VectorXd(2) << 0, 1).finished();
+        indata.push_back(temp);
+        temp = (Eigen::VectorXd(2) << 1, 0).finished();
+        indata.push_back(temp);
+        temp = (Eigen::VectorXd(2) << 1, 1).finished();
+        indata.push_back(temp);
+        temp = (Eigen::VectorXd(2) << 1, 0).finished();
+        indata.push_back(temp);
+        temp = (Eigen::VectorXd(2) << 0, 1).finished();
+        indata.push_back(temp);
+        temp = (Eigen::VectorXd(2) << 1, 1).finished();
+        indata.push_back(temp);
+        temp = (Eigen::VectorXd(2) << 0, 1).finished();
+        indata.push_back(temp);
+        temp = (Eigen::VectorXd(2) << 0, 0).finished();
+        indata.push_back(temp);
+
+
+        vector<Eigen::VectorXd> targets;
+        targets.push_back((Eigen::VectorXd(1) << 0).finished());
+        targets.push_back((Eigen::VectorXd(1) << 1).finished());
+        targets.push_back((Eigen::VectorXd(1) << 1).finished());
+        targets.push_back((Eigen::VectorXd(1) << 0).finished());
+        targets.push_back((Eigen::VectorXd(1) << 1).finished());
+        targets.push_back((Eigen::VectorXd(1) << 1).finished());
+        targets.push_back((Eigen::VectorXd(1) << 0).finished());
+        targets.push_back((Eigen::VectorXd(1) << 1).finished());
+        targets.push_back((Eigen::VectorXd(1) << 0).finished());
+
+        for(auto x : indata)
+            cout << x << endl;
+        cout << "targets\n";
+        for(auto x : targets)
+            cout << x << endl;
+        cout << "\n\n\n";
+        
+
+        mm.train(indata, targets, 10, 100);
+
+        return true;
+    } catch(...) {
+        cerr << "Adding Dense Layer to Model Failed (add_layers)" << endl;
+        return false;
+    }
+}
+
 
 
 // @test : test_initializers
@@ -120,4 +177,8 @@ int main(int argc, char **argv) {
         cout << "Success.\n";
     else 
         cout << "Failed\n";
+
+    cout << "\n\n\n";
+
+    simple_xor_test();
 }

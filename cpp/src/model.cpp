@@ -20,13 +20,11 @@ bool Model::push_layer(std::shared_ptr<Layer> layer) {
 
     if(!m_layers.size()) {
         if(layer->get_input_dim() != this->m_input_dim) {
-            // @TODO raise proper sizing error message / exception
             return false;
         }
     }
     else {
         if(layer->get_input_dim() != this->m_layers.back()->get_layer_size()) {
-            // @TODO raise proper sizing error message / exception
             return false;
         }
     }
@@ -38,13 +36,43 @@ std::vector<std::shared_ptr<Layer>> Model::get_layers() const {
     return this->m_layers;
 }
 
-std::vector<EpochResult> Model::train(std::vector<Eigen::VectorXd> & indat,
+std::vector<EpochResult> Model::train(
+        std::vector<Eigen::VectorXd> & indat,
         std::vector<Eigen::VectorXd> & targets,
         uint batchsize, uint nepochs, bool verbose) {
 
     std::vector<EpochResult> results = {};
 
-    // perform training
+    for(uint i = 0; i < nepochs; i++) {
+        double totloss = 0.0;
+        for(uint n = 0; n < indat.size(); n++) {
+            auto throughdata = std::make_shared<Eigen::VectorXd>(indat[n]);
+             // std::cout << "Feeding Forward...\n";
+             // std::cout << "Input : \n" << *throughdata << "\n\n";
+            for(auto &layer : m_layers) {
+                throughdata = layer->feed(throughdata);
+                // std::cout << "Intermediate : " << *throughdata << "\n\n";
+            }
+            std::cout << "Output : " << *throughdata << ", Target : " << targets[n] << std::endl;
+            auto error = std::make_shared<Eigen::MatrixXd>(*throughdata - targets[n]);
+            // std::cout << "Error : " << *error << std::endl;
+            auto loss = (error->transpose())*(*error);
+            std::cout << "Loss : " << loss << std::endl;
+            totloss += loss(0);
+
+            auto rit = m_layers.rbegin();
+            for (; rit!= m_layers.rend(); ++rit) {
+                error = (*rit)->bprop(error);
+            }
+
+            for(auto &layer : m_layers) {
+                layer->update();
+            }
+        }
+
+        std::cout << "Epoch " << i << " Finished, average loss = " << totloss/indat.size() << "\n\n";
+
+    }
 
     return results;
 }

@@ -13,16 +13,16 @@ namespace mlstax {
 Dense::Dense(uint layer_size, uint input_dim, std::shared_ptr<Initializer> init, std::shared_ptr<Activation> act)
     : Layer(layer_size, input_dim, init, act)
 {
-  m_name = "Dense";
-  m_weights = Eigen::MatrixXd(m_layer_size, m_input_dim);
-  m_initializer->init_weights(m_weights);
-  m_dweights = Eigen::MatrixXd(m_layer_size, m_input_dim);
-  m_bias = Eigen::VectorXd::Zero(m_layer_size, 1);
-  m_dbias = Eigen::VectorXd::Zero(m_layer_size, 1);
+    m_name = "Dense";
+    m_weights = Eigen::MatrixXd(m_layer_size, m_input_dim);
+    m_initializer->init_weights(m_weights);
+    m_dweights = Eigen::MatrixXd::Zero(m_layer_size, m_input_dim);
+    m_bias = Eigen::VectorXd::Zero(m_layer_size, 1);
+    m_dbias = Eigen::VectorXd::Zero(m_layer_size, 1);
 
-  m_last_input = Eigen::VectorXd(m_layer_size, 1);
-  m_hidden_state = Eigen::VectorXd::Zero(m_layer_size, 1);
-  m_dhidden_state = Eigen::VectorXd::Zero(m_layer_size, 1);
+    m_last_input = Eigen::VectorXd(m_layer_size, 1);
+    m_hidden_state = Eigen::VectorXd::Zero(m_layer_size, 1);
+    m_dhidden_state = Eigen::VectorXd::Zero(m_layer_size, 1);
 }
 
 std::shared_ptr<Eigen::VectorXd> Dense::feed(std::shared_ptr<Eigen::VectorXd> indat) {
@@ -43,6 +43,13 @@ std::shared_ptr<Eigen::MatrixXd> Dense::bprop(std::shared_ptr<Eigen::MatrixXd> e
 }
 
 bool Dense::update() {
+    // std::cout << "dweights : " << m_dweights << std::endl; </br> </br>
+    m_weights -= 0.10*m_dweights;
+    m_bias -= 0.10*m_dbias;
+    m_dweights = Eigen::MatrixXd::Zero(m_layer_size, m_input_dim);
+    m_dbias = Eigen::VectorXd::Zero(m_layer_size, 1);
+    // std::cout << "weights" << m_weights << std::endl;
+    // std::cout << "bias : " << m_bias << std::endl;
     return true;
 }
 
